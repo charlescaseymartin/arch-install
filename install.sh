@@ -42,17 +42,15 @@ read -p "Enter username: " username
 
 # Setup Username and Password
 hostname="arch-clone"
+rootuser="root"
 
-printf "\nEnter root user password: "
-read -s rootpass
+printf "\nEnter root user password: " && read -s rootpass
 [-z "$rootpass"] && printf "Enter valid root password!" && exit
 
-printf "\nEnter username: "
-read username
+printf "\nEnter username: " && read username
 [-z "$username"] && printf "\nEnter valid username!" && exit
 
-printf "\nEnter user password: "
-read -s userpass
+printf "\nEnter user password: " && read -s userpass
 [-z "$userpass"] && printf "Enter valid user password!" && exit
 
 # Packages and chroot. 
@@ -72,7 +70,7 @@ arch-chroot /mnt sh -c \
 
 	systemctl enable ufw; 
 	systemctl enable NetworkManager; 
-	echo "root:$rootpass" | chpasswd; 
+	echo "$rootuser:$rootpass" | chpasswd; 
 	echo "$username:$userpass" | chpasswd; 
 	
 	echo "$hostname" > /etc/hostname;
