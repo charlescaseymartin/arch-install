@@ -38,16 +38,8 @@ swapon $swap
 
 # Setup Username and Password
 hostname="arch-clone"
-rootuser="root"
-
-printf "\nEnter root user password: " && read -s rootpass
-[-z "$rootpass"] && printf "Enter valid root password!" && exit
-
-printf "\nEnter username: " && read username
-[-z "$username"] && printf "\nEnter valid username!" && exit
-
-printf "\nEnter user password: " && read -s userpass
-[-z "$userpass"] && printf "Enter valid user password!" && exit
+printf "\nEnter user password: " && read -s password
+[-z "$password"] && printf "Enter valid user password!" && exit
 
 
 # Packages and chroot. 
@@ -67,8 +59,7 @@ arch-chroot /mnt sh -c \
 
 	systemctl enable ufw; 
 	systemctl enable NetworkManager; 
-	echo "$rootuser:$rootpass" | chpasswd; 
-	echo "$username:$userpass" | chpasswd; 
+	echo "root:$password" | chpasswd; 
 	
 	echo "$hostname" > /etc/hostname;
 	echo -e "127.0.0.1	localhost.localdomain   localhost\n::1		localhost.localdomain   localhost\n127.0.0.1    $hostname.localdomain    $hostname" > /etc/hosts; 
