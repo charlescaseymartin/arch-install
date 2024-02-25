@@ -89,3 +89,25 @@ hostname="arch-clone"
 #fi
 
 printf "*--- Installation Complete! ---*"
+	systemctl enable ufw; 
+	systemctl enable NetworkManager; 
+	echo "$username:$password" | chpasswd; 
+	
+	echo "$hostname" > /etc/hostname;
+	echo -e "127.0.0.1	localhost.localdomain   localhost\n::1		localhost.localdomain   localhost\n127.0.0.1    $hostname.localdomain    $hostname" > /etc/hosts; 
+
+	grub-install --target=x86_64-efi --efi-directory=/boot --bootloader-id=GRUB; 
+	grub-mkconfig -o /boot/grub/grub.cfg;
+	'
+
+# Finalize. 
+umount -R /mnt 
+
+set +xe printf "
+	*--- Installation Complete! ---*
+	|                              |
+	|     Username: $username      |
+	|     Password: $password      |
+	|                              |
+	*------------------------------*
+"
