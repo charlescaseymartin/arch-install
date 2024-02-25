@@ -37,14 +37,15 @@ swapon $swap
 
 # Setup Username and Password
 hostname="arch-clone"
-printf "\nEnter root user password: " && read -s rootpass
-[ -z "$rootpass" ] && printf "Enter valid root user password!" && exit
 
-printf "\nEnter username: " && read username
-[ -z "$username" ] && printf "Enter valid username!" && exit
+read -s -p "Enter root user password: " rootpass
+[ -z "$rootpass" ] && printf "\nEnter valid root user password!" && exit
 
-printf "\nEnter user password: " && read -s userpass
-[ -z "$userpass" ] && printf "Enter valid user password!" && exit
+read -p "Enter username: " username
+[ -z "$username" ] && printf "\nEnter valid username!" && exit
+
+read -s -p "Enter user password: "userpass
+[ -z "$userpass" ] && printf "\nEnter valid user password!" && exit
 
 # Packages and chroot. 
 pacstrap /mnt linux linux-firmware ufw networkmanager neovim base base-devel git man efibootmgr grub 
