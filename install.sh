@@ -53,6 +53,17 @@ arch-chroot -u $user /mnt sh -c '
 read -p "Enter username: " username
 [ -z "$username" ] && printf "\nEnter valid username!" && exit
 
+# Enter the system and set up basic locale, passwords and bootloader.
+printf "\nEnter username: "
+read username
+[-z "$username"] && printf "\nEnter valid username!" && exit
+
+printf "\nEnter password: "
+read -s password
+[-z "$password"] && printf "Enter valid password!" && exit
+
+hostname="arch-clone"
+
 #arch-chroot /mnt sh -c '
 #        printf "Switching to user: $user"
 #        su "$user"
