@@ -8,7 +8,6 @@
 printf "\nThis script will erase all data on $1.\nAre you certain? (y/n): " && read CERTAIN
 [ "$CERTAIN" != "y" ] && printf "Abort." && exit
 
-
 disk=$1
 swap=${disk}1
 boot=${disk}2
@@ -38,60 +37,43 @@ swapon $swap
 
 archinstall --config ./config.json --creds ./creds.json
 
-# Install configs and environment
-pacman -S jq --noconfirm
-user=$(jq -r '.["!users"][0].username' <<< cat ./creds.json)
-printf "creds user: $(user)\n";
-
-arch-chroot -u $user /mnt sh -c '
-        echo -e "\nwhoami user: $whoami";
-        current_user=$whoami
-        echo -e "\ncurrent_user:" $current_user;
-        HOME="/home/"$whoami;
-        echo -e "\nhome directory:" $HOME;
-        '
 read -p "Enter username: " username
 [ -z "$username" ] && printf "\nEnter valid username!" && exit
 
-# Enter the system and set up basic locale, passwords and bootloader.
+# Setup Username and Password
+hostname="arch-clone"
+
+printf "\nEnter root user password: "
+read -s rootpass
+[-z "$rootpass"] && printf "Enter valid root password!" && exit
+
 printf "\nEnter username: "
 read username
 [-z "$username"] && printf "\nEnter valid username!" && exit
 
-printf "\nEnter password: "
-read -s password
-[-z "$password"] && printf "Enter valid password!" && exit
+printf "\nEnter user password: "
+read -s userpass
+[-z "$userpass"] && printf "Enter valid user password!" && exit
 
-hostname="arch-clone"
+# Packages and chroot. 
+pacstrap /mnt linux linux-firmware ufw networkmanager neovim base base-devel git man efibootmgr grub 
+genfstab -U /mnt > /mnt/etc/fstab 
 
-#arch-chroot /mnt sh -c '
-#        printf "Switching to user: $user"
-#        su "$user"
-#        cd $HOME
-#        systemctl enable ufw.service;
-#        systemctl enable NetworkManager;
-#        chsh -s $(which zsh);
-#        curl https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh | sh;
-#        git clone https://github.com/charlescaseymartin/archlinux-moded-dotfiles.git;
-#        cd ~/archlinux-moded-dotfiles;
-#        sh install.sh -i'
-# Checks if virtual machine argument is valid
-#if [ "$2" == "-v" ]
-#then
-#        printf "\nConfiguring virtualbox environment..."
-#        arch-chroot /mnt sh -c '
-#                su "$user"
-#                pacman -S virtualbox-guest-utils --noconfirm;
-#                systemctl enable vboxservice.service;
-#                systemctl start vboxservice.service;
-#                VBoxClient --clipboard;
-#                VBoxClient --seamless'
-#fi
+# Enter the system and set up basic locale and bootloader.
+arch-chroot /mnt sh -c \
+	'
+	set -xe; 
+	sed -i "s/^#en_US.UTF-8/en_US.UTF-8/g" /etc/locale.gen; 
+	
+	echo "LANG=en_US.UTF-8" > /etc/locale.conf; 
+	locale-gen; 
+	ln -sf /usr/share/zoneinfo/Africa/Johannesburg /etc/localtime; 
+	hwclock --systohc;
 
-printf "*--- Installation Complete! ---*"
 	systemctl enable ufw; 
 	systemctl enable NetworkManager; 
-	echo "$username:$password" | chpasswd; 
+	echo "root:$rootpass" | chpasswd; 
+	echo "$username:$userpass" | chpasswd; 
 	
 	echo "$hostname" > /etc/hostname;
 	echo -e "127.0.0.1	localhost.localdomain   localhost\n::1		localhost.localdomain   localhost\n127.0.0.1    $hostname.localdomain    $hostname" > /etc/hosts; 
@@ -101,13 +83,5 @@ printf "*--- Installation Complete! ---*"
 	'
 
 # Finalize. 
-umount -R /mnt 
-
-set +xe printf "
-	*--- Installation Complete! ---*
-	|                              |
-	|     Username: $username      |
-	|     Password: $password      |
-	|                              |
-	*------------------------------*
-"
+umount -R /mnt
+set +xe printf "*--- Installation Complete! ---*"
