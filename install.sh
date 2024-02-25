@@ -12,8 +12,8 @@ swap=${disk}3
 boot=${disk}2 
 root=${disk}1 
 
-# Cleanup from previous runs.  
-swapoff $swap 
+# Cleanup from previous runs.
+[ -b "$swap" ] && swapoff $swap
 umount -R /mnt  
 
 # Partition 1G for boot, 1G for swap, rest for root. 
