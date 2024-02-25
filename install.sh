@@ -26,14 +26,13 @@ parted -sa optimal $disk mkpart primary ext4 2G 100%
 parted -s $disk set 1 esp on 
 
 # Format the partitions. 
-mkfs.fat -IF32 $boot 
-mkswap -f $swap 
-mkfs.ext4 -F $root 
-mkfs.ext4 -F $home 
+mkfs.fat -F 32 $boot 
+mkswap $swap 
+mkfs.ext4 $root 
 
 # Mount the partitions. 
 mount $root /mnt 
-mount -m $boot /mnt/boot 
+mount $boot /mnt/boot 
 swapon $swap 
 
 # Packages and chroot. 
