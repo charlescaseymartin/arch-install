@@ -42,9 +42,18 @@ read -p "Enter username: " username
 
 # Setup Username and Password
 hostname="arch-clone"
-printf "\nEnter user password: " && read -s password
-[-z "$password"] && printf "Enter valid user password!" && exit
+printf "\nEnter root user password: " && read -s rootpass
+[ -z "$rootpass" ] && printf "Enter valid root user password!" && exit
 
+<<<<<<< HEAD
+=======
+printf "\nEnter username: " && read username
+[ -z "$username" ] && printf "Enter valid username!" && exit
+
+printf "\nEnter user password: " && read -s userpass
+[ -z "$userpass" ] && printf "Enter valid user password!" && exit
+
+>>>>>>> ba51e22 (fixed username and password check)
 # Packages and chroot. 
 pacstrap /mnt linux linux-firmware ufw networkmanager neovim base base-devel git man efibootmgr grub 
 genfstab -U /mnt > /mnt/etc/fstab 
