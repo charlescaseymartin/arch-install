@@ -13,7 +13,8 @@ boot=${disk}2
 root=${disk}1 
 
 # Cleanup from previous runs.  
-swapoff $swap umount -R /mnt  
+swapoff $swap 
+umount -R /mnt  
 
 # Partition 1G for boot, 1G for swap, rest for root. 
 # Optimal alignment will change the exact size though! 
