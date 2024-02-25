@@ -62,11 +62,6 @@ arch-chroot /mnt sh -c \
 	ln -sf /usr/share/zoneinfo/Africa/Johannesburg /etc/localtime; 
 	hwclock --systohc;
 
-	ufw reset;
-	ufw default deny incoming;
-	ufw default allow outgoing;
-	ufw enable;
-
 	systemctl enable ufw; 
 	systemctl enable NetworkManager; 
 	echo "$username:$password" | chpasswd; 
