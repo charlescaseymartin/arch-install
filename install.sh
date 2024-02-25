@@ -42,8 +42,10 @@ pacstrap /mnt linux linux-firmware ufw networkmanager neovim base base-devel git
 genfstab -U /mnt > /mnt/etc/fstab 
 
 # Enter the system and set up basic locale, passwords and bootloader.
-read -s "Enter username: " username
-read -sp "Enter password: " password
+printf "Enter username: " && read username
+[-z "$username"] && printf "Enter valid username!" && exit
+printf "Enter password: " && read -s password
+[-z "$password"] && printf "Enter valid password!" && exit
 hostname="arch-clone"
 
 arch-chroot /mnt sh -c \
