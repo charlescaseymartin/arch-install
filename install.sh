@@ -48,15 +48,6 @@ read -p "Enter username: " username
 read -s -p "Enter user password: " userpass
 [ -z $userpass ] && printf "\nEnter valid user password!" && exit
 
-#printf "\nEnter root user password: " && read -s rootpass
-#[ -z "$rootpass" ] && printf "Enter valid root user password!" && exit
-
-#printf "\nEnter username: " && read username
-#[ -z "$username" ] && printf "Enter valid username!" && exit
-
-#printf "\nEnter user password: " && read -s userpass
-#[ -z "$userpass" ] && printf "Enter valid user password!" && exit
-
 # Packages and chroot. 
 pacstrap /mnt linux linux-firmware ufw networkmanager neovim base base-devel git man efibootmgr grub 
 genfstab -U /mnt > /mnt/etc/fstab 
