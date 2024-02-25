@@ -35,25 +35,17 @@ mount $root /mnt
 mount --mkdir $boot /mnt/boot
 swapon $swap
 
-archinstall --config ./config.json --creds ./creds.json
-
-read -p "Enter username: " username
-[ -z "$username" ] && printf "\nEnter valid username!" && exit
-
 # Setup Username and Password
 hostname="arch-clone"
 printf "\nEnter root user password: " && read -s rootpass
 [ -z "$rootpass" ] && printf "Enter valid root user password!" && exit
 
-<<<<<<< HEAD
-=======
 printf "\nEnter username: " && read username
 [ -z "$username" ] && printf "Enter valid username!" && exit
 
 printf "\nEnter user password: " && read -s userpass
 [ -z "$userpass" ] && printf "Enter valid user password!" && exit
 
->>>>>>> ba51e22 (fixed username and password check)
 # Packages and chroot. 
 pacstrap /mnt linux linux-firmware ufw networkmanager neovim base base-devel git man efibootmgr grub 
 genfstab -U /mnt > /mnt/etc/fstab 
@@ -71,8 +63,7 @@ arch-chroot /mnt sh -c \
 
 	systemctl enable ufw; 
 	systemctl enable NetworkManager; 
-	echo "root:$rootpass" | chpasswd; 
-	echo "$username:$userpass" | chpasswd; 
+	echo "root:$password" | chpasswd; 
 	
 	echo "$hostname" > /etc/hostname;
 	echo -e "127.0.0.1	localhost.localdomain   localhost\n::1		localhost.localdomain   localhost\n127.0.0.1    $hostname.localdomain    $hostname" > /etc/hosts; 
