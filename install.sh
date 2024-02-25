@@ -36,22 +36,27 @@ mount $root /mnt
 mount --mkdir $boot /mnt/boot 
 swapon $swap 
 
-# Packages and chroot. 
-pacstrap /mnt linux linux-firmware ufw networkmanager neovim base base-devel git man efibootmgr grub 
+# Setup Username and Password
+hostname="arch-clone"
 
-genfstab -U /mnt > /mnt/etc/fstab 
+printf "\nEnter root user password: "
+read -s rootpass
+[-z "$rootpass"] && printf "Enter valid root password!" && exit
 
-# Enter the system and set up basic locale, passwords and bootloader.
 printf "\nEnter username: "
 read username
 [-z "$username"] && printf "\nEnter valid username!" && exit
 
-printf "\nEnter password: "
-read -s password
-[-z "$password"] && printf "Enter valid password!" && exit
+printf "\nEnter user password: "
+read -s userpass
+[-z "$userpass"] && printf "Enter valid user password!" && exit
 
-hostname="arch-clone"
 
+# Packages and chroot. 
+pacstrap /mnt linux linux-firmware ufw networkmanager neovim base base-devel git man efibootmgr grub 
+genfstab -U /mnt > /mnt/etc/fstab 
+
+# Enter the system and set up basic locale and bootloader.
 arch-chroot /mnt sh -c \
 	'
 	set -xe; 
@@ -64,7 +69,8 @@ arch-chroot /mnt sh -c \
 
 	systemctl enable ufw; 
 	systemctl enable NetworkManager; 
-	echo "$username:$password" | chpasswd; 
+	echo "root:$rootpass" | chpasswd; 
+	echo "$username:$userpass" | chpasswd; 
 	
 	echo "$hostname" > /etc/hostname;
 	echo -e "127.0.0.1	localhost.localdomain   localhost\n::1		localhost.localdomain   localhost\n127.0.0.1    $hostname.localdomain    $hostname" > /etc/hosts; 
@@ -74,13 +80,5 @@ arch-chroot /mnt sh -c \
 	'
 
 # Finalize. 
-umount -R /mnt 
-
-set +xe printf "
-	*--- Installation Complete! ---*
-	|                              |
-	|     Username: $username      |
-	|     Password: $password      |
-	|                              |
-	*------------------------------*
-"
+umount -R /mnt
+set +xe printf "*--- Installation Complete! ---*"
