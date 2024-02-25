@@ -32,7 +32,7 @@ mkfs.ext4 $root
 
 # Mount the partitions. 
 mount $root /mnt 
-mount $boot /mnt/boot 
+mount --mkdir $boot /mnt/boot 
 swapon $swap 
 
 # Packages and chroot. 
