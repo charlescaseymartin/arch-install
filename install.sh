@@ -8,9 +8,9 @@ printf "\nThis script will erase all data on $1.\nAre you certain? (y/n): " && r
 [ "$CERTAIN" != "y" ] && printf "Abort." && exit 
 
 disk=$1 
-swap=${disk}3 
+swap=${disk}1 
 boot=${disk}2 
-root=${disk}1 
+root=${disk}3 
 
 # Cleanup from previous runs.
 [ -b "$swap" ] && swapoff $swap
