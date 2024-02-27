@@ -39,13 +39,13 @@ swapon $swap
 hostname="arch-clone"
 
 read -s -p "Enter root user password: " rootpass
-[ -z $rootpass ] > /dev/null && printf "\nEnter valid root user password!" && exit
+[ -z "$rootpass" ] && printf "\nEnter valid root user password!" && exit
 
 read -p "Enter username: " username
-[ -z $username ] && printf "\nEnter valid username!" && exit
+[ -z "$username" ] && printf "\nEnter valid username!" && exit
 
 read -s -p "Enter user password: " userpass
-[ -z $userpass ] && printf "\nEnter valid user password!" && exit
+[ -z "$userpass" ] && printf "\nEnter valid user password!" && exit
 
 
 
