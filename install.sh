@@ -50,36 +50,36 @@ read -p "Enter username: " username
 read -s -p "Enter user password: " userpass
 [ -z "$userpass" ] && printf "\nEnter valid user password!" && exit
 
-
+printf 'rootpass: "$rootpass"\n"$username": "$userpass"'
 
 # Packages and chroot. 
 pacstrap /mnt linux linux-firmware ufw networkmanager neovim base base-devel git man efibootmgr grub 
 genfstab -U /mnt > /mnt/etc/fstab 
 
 # Enter the system and set up basic locale and bootloader.
-arch-chroot /mnt sh -c \
-	'
-	set -xe; 
-	sed -i "s/^#en_US.UTF-8/en_US.UTF-8/g" /etc/locale.gen; 
-	
-	echo "LANG=en_US.UTF-8" > /etc/locale.conf; 
-	locale-gen; 
-	ln -sf /usr/share/zoneinfo/Africa/Johannesburg /etc/localtime; 
-	hwclock --systohc;
-
-	systemctl enable ufw; 
-	systemctl enable NetworkManager; 
-	echo root:"$rootpass" | chpasswd; 
-	useradd -m "$username"; 
-	echo "$username":"$userpass" | chpasswd; 
-	
-	echo "$hostname" > /etc/hostname;
-	echo -e "127.0.0.1	localhost.localdomain   localhost\n::1		localhost.localdomain   localhost\n127.0.0.1    $hostname.localdomain    $hostname" > /etc/hosts; 
-
-	grub-install --target=x86_64-efi --efi-directory=/boot --bootloader-id=GRUB; 
-	grub-mkconfig -o /boot/grub/grub.cfg;
-	'
+#arch-chroot /mnt sh -c \
+#	'
+#	set -xe; 
+#	sed -i "s/^#en_US.UTF-8/en_US.UTF-8/g" /etc/locale.gen; 
+#	
+#	echo "LANG=en_US.UTF-8" > /etc/locale.conf; 
+#	locale-gen; 
+#	ln -sf /usr/share/zoneinfo/Africa/Johannesburg /etc/localtime; 
+#	hwclock --systohc;
+#
+#	systemctl enable ufw;
+#	systemctl enable NetworkManager; 
+#	echo root:"$rootpass" | chpasswd; 
+#	useradd -m "$username"; 
+#	echo "$username":"$userpass" | chpasswd; 
+#	
+#	echo "$hostname" > /etc/hostname;
+#	echo -e "127.0.0.1	localhost.localdomain   localhost\n::1		localhost.localdomain   localhost\n127.0.0.1    $hostname.localdomain    $hostname" > /etc/hosts; 
+#
+#	grub-install --target=x86_64-efi --efi-directory=/boot --bootloader-id=GRUB; 
+#	grub-mkconfig -o /boot/grub/grub.cfg;
+#	'
 
 # Finalize. 
-umount -R /mnt
-set +xe printf "*--- Installation Complete! ---*"
+#umount -R /mnt
+#set +xe printf "*--- Installation Complete! ---*"
