@@ -42,8 +42,9 @@ hostname="arch-clone"
 set +xv
 read -s -p "Enter root user password: " rootpass
 [ -z "$rootpass" ] && printf "\nEnter valid root user password!" && exit
+printf '\n'
 
-read -p "\nEnter username: " username
+read -p "Enter username: " username
 [ -z "$username" ] && printf "\nEnter valid username!" && exit
 
 read -s -p "Enter user password: " userpass
