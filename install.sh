@@ -39,7 +39,7 @@ swapon $swap
 # Setup Username and Password
 hostname="arch-clone"
 
-set +v
+set +o verbose
 read -s -p "Enter root user password: " rootpass
 [ -z "$rootpass" ] && printf "\nEnter valid root user password!" && exit
 
