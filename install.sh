@@ -43,7 +43,7 @@ set +xv
 read -s -p "Enter root user password: " rootpass
 [ -z "$rootpass" ] && printf "\nEnter valid root user password!" && exit
 
-read -p "Enter username: " username
+read -p "\nEnter username: " username
 [ -z "$username" ] && printf "\nEnter valid username!" && exit
 
 read -s -p "Enter user password: " userpass
