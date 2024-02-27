@@ -55,6 +55,8 @@ pacstrap /mnt linux linux-firmware ufw networkmanager neovim base base-devel git
 genfstab -U /mnt > /mnt/etc/fstab 
 
 # Enter the system and set up basic locale and bootloader.
+#	echo "root:$(rootpass)" | chpasswd; 
+#	echo "$(username):$(userpass)" | chpasswd; 
 arch-chroot /mnt sh -c \
 	'
 	set -xe; 
@@ -67,8 +69,8 @@ arch-chroot /mnt sh -c \
 
 	systemctl enable ufw; 
 	systemctl enable NetworkManager; 
-	echo "root:$(rootpass)" | chpasswd; 
-	echo "$(username):$(userpass)" | chpasswd; 
+	echo "root:1234" | chpasswd; 
+	echo "test-user:1234" | chpasswd; 
 	
 	echo "$hostname" > /etc/hostname;
 	echo -e "127.0.0.1	localhost.localdomain   localhost\n::1		localhost.localdomain   localhost\n127.0.0.1    $hostname.localdomain    $hostname" > /etc/hosts; 
