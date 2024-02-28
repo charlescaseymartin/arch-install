@@ -29,8 +29,11 @@
     "packages": [
         "ufw",
         "networkmanager",
+	"alacritty",
+	"zsh",
         "neovim",
-        "firefox"
+        "firefox",
+	"rofi"
     ],
     "parallel downloads": 0,
     "profile_config": {
@@ -53,5 +56,8 @@
     "swap": true,
     "timezone": "Africa/Johannesburg",
     "uki": false,
-    "version": "2.7.1"
+    "version": "2.7.1",
+    "custom-commands": [
+	    "echo 'This is a test' > ./my-install-test.txt"
+    ]
 }
