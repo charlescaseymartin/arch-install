@@ -32,6 +32,8 @@ mkswap $swap
 # Mount the partitions. 
 mount $root /mnt 
 mount --mkdir $boot /mnt/boot 
-swapon $swap 
+swapon $swap
+
+archinstall --dry-run --config ./config.json --creds ./creds.json
 
 printf "*--- Installation Complete! ---*"
