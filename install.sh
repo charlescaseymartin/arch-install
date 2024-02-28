@@ -18,17 +18,16 @@ umount -R /mnt
 
 # Partition 1G for boot, 1G for swap, rest for root. 
 # Optimal alignment will change the exact size though! 
-set -xe
 parted -s $disk mklabel gpt 
 parted -sa optimal $disk mkpart primary linux-swap 0% 1G 
 parted -sa optimal $disk mkpart primary fat32 1G 2G 
 parted -sa optimal $disk mkpart primary ext4 2G 100%
-parted -s $disk set 1 esp on 
+parted -s $disk set 2 esp on 
 
 # Format the partitions. 
-mkfs.ext4 $root 
-mkfs.fat -F 32 $boot 
-mkswap $swap 
+mkfs.ext4 -F $root
+mkfs.fat -F 32 $boot
+mkswap $swap
 
 # Mount the partitions. 
 mount $root /mnt 
