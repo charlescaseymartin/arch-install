@@ -29,11 +29,13 @@
     "packages": [
         "ufw",
         "networkmanager",
-	"alacritty",
-	"zsh",
+        "git",
+	      "alacritty",
+	      "zsh",
         "neovim",
         "firefox",
-	"rofi"
+	      "rofi",
+	      "curl"
     ],
     "parallel downloads": 0,
     "profile_config": {
@@ -58,6 +60,12 @@
     "uki": false,
     "version": "2.7.1",
     "custom-commands": [
-	    "echo 'This is a test' > ./my-install-test.txt"
+	    "systemctl enable ufw.service",
+	    "systemctl enable NetworkManager",
+	    "chsh -s $(which zsh)",
+	    "sh -c '$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)'",
+	    "git clone https://github.com/charlescaseymartin/archlinux-moded-dotfiles.git",
+      "cd archlinux-moded-dotfiles",
+      "sh install.sh -i"
     ]
 }
