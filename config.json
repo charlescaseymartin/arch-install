@@ -31,12 +31,12 @@
         "networkmanager",
         "git",
 	      "alacritty",
+        "tmux",
 	      "zsh",
         "neovim",
         "firefox",
 	      "rofi",
-	      "curl",
-        "tmux"
+	      "curl"
     ],
     "parallel downloads": 0,
     "profile_config": {
