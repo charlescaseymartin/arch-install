@@ -63,7 +63,7 @@
 	    "systemctl enable ufw.service",
 	    "systemctl enable NetworkManager",
 	    "chsh -s $(which zsh)",
-	    "sh -c '$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh | sed -e 's.#!/bin/sh.#!/usr/bin/env sh.')'",
+	    "sh -c $(curl -fsSL https://raw.githubusercontent.com/charlescaseymartin/arch-install/main/ohmyzh-install.sh)",
 	    "git clone https://github.com/charlescaseymartin/archlinux-moded-dotfiles.git",
       "cd archlinux-moded-dotfiles",
       "sh install.sh -i"
