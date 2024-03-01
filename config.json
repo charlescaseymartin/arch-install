@@ -35,7 +35,8 @@
         "neovim",
         "firefox",
 	      "rofi",
-	      "curl"
+	      "curl",
+        "tmux"
     ],
     "parallel downloads": 0,
     "profile_config": {
@@ -58,7 +59,5 @@
     "swap": true,
     "timezone": "Africa/Johannesburg",
     "uki": false,
-    "version": "2.7.1",
-    "custom-commands": [
-    ]
+    "version": "2.7.1"
 }

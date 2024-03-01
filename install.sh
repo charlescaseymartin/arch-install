@@ -41,8 +41,8 @@ arch-chroot /mnt sh -c 'systemctl enable ufw.service'
 arch-chroot /mnt sh -c 'systemctl enable NetworkManager'
 arch-chroot /mnt sh -c 'chsh -s $(which zsh)'
 arch-chroot /mnt sh -c 'curl https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh | sh'
-arch-chroot /mnt sh -c 'git clone https://github.com/charlescaseymartin/archlinux-moded-dotfiles.git'
-arch-chroot /mnt sh -c 'cd archlinux-moded-dotfiles; sh install.sh -i'
+arch-chroot /mnt sh -c 'cd /root; git clone https://github.com/charlescaseymartin/archlinux-moded-dotfiles.git'
+arch-chroot /mnt sh -c 'cd /root/archlinux-moded-dotfiles; sh install.sh -i'
 
 
 printf "*--- Installation Complete! ---*"
