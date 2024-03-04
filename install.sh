@@ -40,7 +40,7 @@ root=${disk}3
 
 # Install configs and environment
 pacman -S jq --noconfirm
-user=$(jq -r '.!users[0].username' <<< cat ./creds.json)
+user=$(jq -r '.["!users"][0].username' <<< cat ./creds.json)
 printf "Username: $user"
 
 #arch-chroot /mnt sh -c '
