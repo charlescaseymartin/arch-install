@@ -10,7 +10,7 @@ printf "\nThis script will erase all data on $1.\nAre you certain? (y/n): " && r
 
 # Checks if virtual machine argument is valid
 is_virtual=false
-if [ -z "$2" || "$2" != "-v" ]
+if [ "$2" != "-v" ]
 then
         printf "This machine will considered as a normal host machine"
 else
