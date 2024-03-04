@@ -39,20 +39,26 @@ swapon $swap
 archinstall --config ./config.json --creds ./creds.json
 
 # Install configs and environment
-arch-chroot /mnt sh -c 'systemctl enable ufw.service'
-arch-chroot /mnt sh -c 'systemctl enable NetworkManager'
-arch-chroot /mnt sh -c 'chsh -s $(which zsh)'
-arch-chroot /mnt sh -c 'curl https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh | sh'
-arch-chroot /mnt sh -c 'cd /root; git clone https://github.com/charlescaseymartin/archlinux-moded-dotfiles.git'
-arch-chroot /mnt sh -c 'cd /root/archlinux-moded-dotfiles; sh install.sh -i'
+arch-chroot /mnt sh -c '
+        systemctl enable ufw.service;
+        systemctl enable NetworkManager;
+        chsh -s $(which zsh);
+        su steve;
+        curl https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh | sh;
+        git clone https://github.com/charlescaseymartin/archlinux-moded-dotfiles.git;
+        cd ~/archlinux-moded-dotfiles;
+        sh install.sh -i'
 
 # Checks if virtual machine argument is valid
 if [ "$2" == "-v" ]
 then
         printf "\nConfiguring virtualbox environment..."
-        arch-chroot /mnt sh -c 'pacman -S virtualbox-guest-utils --noconfirm'
-        arch-chroot /mnt sh -c 'systemctl enable vboxservice.service; systemctl start vboxservice.service'
-        arch-chroot /mnt sh -c 'VBoxClient --clipboard; VBoxClient --seamless'
+        arch-chroot /mnt sh -c '
+                pacman -S virtualbox-guest-utils --noconfirm;
+                systemctl enable vboxservice.service;
+                systemctl start vboxservice.service;
+                VBoxClient --clipboard;
+                VBoxClient --seamless'
 fi
 
 printf "*--- Installation Complete! ---*"
