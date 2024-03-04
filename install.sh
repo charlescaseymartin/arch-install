@@ -8,56 +8,50 @@
 printf "\nThis script will erase all data on $1.\nAre you certain? (y/n): " && read CERTAIN
 [ "$CERTAIN" != "y" ] && printf "Abort." && exit
 
-# Checks if virtual machine argument is valid
-is_virtual=false
-if [ "$2" != "-v" ]
-then
-        printf "This machine will considered as a normal host machine"
-else
-        is_virtual=true
-        printf"This machine will considered as a virtualbox machine"
-fi
 
 disk=$1
 swap=${disk}1
 boot=${disk}2
 root=${disk}3
 
-# Cleanup from previous runs.
-[ -b "$swap" ] && swapoff $swap
-umount -R /mnt
+## Cleanup from previous runs.
+#[ -b "$swap" ] && swapoff $swap
+#umount -R /mnt
+#
+## Partition 1G for boot, 1G for swap, rest for root.
+## Optimal alignment will change the exact size though!
+#parted -s $disk mklabel gpt
+#parted -sa optimal $disk mkpart primary linux-swap 0% 1G
+#parted -sa optimal $disk mkpart primary fat32 1G 2G
+#parted -sa optimal $disk mkpart primary ext4 2G 100%
+#parted -s $disk set 2 esp on
+#
+## Format the partitions.
+#mkfs.ext4 -F $root
+#mkfs.fat -F 32 $boot
+#mkswap $swap
+#
+## Mount the partitions.
+#mount $root /mnt
+#mount --mkdir $boot /mnt/boot
+#swapon $swap
+#
+#archinstall --config ./config.json --creds ./creds.json
+#
+## Install configs and environment
+#arch-chroot /mnt sh -c 'systemctl enable ufw.service'
+#arch-chroot /mnt sh -c 'systemctl enable NetworkManager'
+#arch-chroot /mnt sh -c 'chsh -s $(which zsh)'
+#arch-chroot /mnt sh -c 'curl https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh | sh'
+#arch-chroot /mnt sh -c 'cd /root; git clone https://github.com/charlescaseymartin/archlinux-moded-dotfiles.git'
+#arch-chroot /mnt sh -c 'cd /root/archlinux-moded-dotfiles; sh install.sh -i'
 
-# Partition 1G for boot, 1G for swap, rest for root.
-# Optimal alignment will change the exact size though!
-parted -s $disk mklabel gpt
-parted -sa optimal $disk mkpart primary linux-swap 0% 1G
-parted -sa optimal $disk mkpart primary fat32 1G 2G
-parted -sa optimal $disk mkpart primary ext4 2G 100%
-parted -s $disk set 2 esp on
-
-# Format the partitions.
-mkfs.ext4 -F $root
-mkfs.fat -F 32 $boot
-mkswap $swap
-
-# Mount the partitions.
-mount $root /mnt
-mount --mkdir $boot /mnt/boot
-swapon $swap
-
-archinstall --config ./config.json --creds ./creds.json
-
-# Install configs and environment
-arch-chroot /mnt sh -c 'systemctl enable ufw.service'
-arch-chroot /mnt sh -c 'systemctl enable NetworkManager'
-arch-chroot /mnt sh -c 'chsh -s $(which zsh)'
-arch-chroot /mnt sh -c 'curl https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh | sh'
-arch-chroot /mnt sh -c 'cd /root; git clone https://github.com/charlescaseymartin/archlinux-moded-dotfiles.git'
-arch-chroot /mnt sh -c 'cd /root/archlinux-moded-dotfiles; sh install.sh -i'
-if $is_virtual
+# Checks if virtual machine argument is valid
+if [ "$2" == "-v" ]
 then
-        arch-chroot /mnt sh -c 'pacman -S virtualbox-guest-utils --noconfirm; systemctl enable vboxservice.service'
-        arch-chroot /mnt sh -c 'VBoxClient --clipboard; VBoxClient --seamless'
+        printf "\nConfiguring virtualbox environment..."
+        #arch-chroot /mnt sh -c 'pacman -S virtualbox-guest-utils --noconfirm; systemctl enable vboxservice.service'
+        #arch-chroot /mnt sh -c 'VBoxClient --clipboard; VBoxClient --seamless'
 fi
 
 printf "*--- Installation Complete! ---*"
