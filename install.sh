@@ -50,7 +50,8 @@ arch-chroot /mnt sh -c 'cd /root/archlinux-moded-dotfiles; sh install.sh -i'
 if [ "$2" == "-v" ]
 then
         printf "\nConfiguring virtualbox environment..."
-        arch-chroot /mnt sh -c 'pacman -S virtualbox-guest-utils --noconfirm; systemctl enable vboxservice.service'
+        arch-chroot /mnt sh -c 'pacman -S virtualbox-guest-utils --noconfirm'
+        arch-chroot /mnt sh -c 'systemctl enable vboxservice.service; systemctl start vboxservice.service'
         arch-chroot /mnt sh -c 'VBoxClient --clipboard; VBoxClient --seamless'
 fi
 
