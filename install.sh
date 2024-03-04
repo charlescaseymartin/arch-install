@@ -1,11 +1,22 @@
 #!/bin/sh
 # This uses archinstall and json configurations to install Arch linux with 13-wm
 
+# Checks if drive argument is valid
 [ -z "$1" ] && printf "Usage: Provide only the drive to install to (i.e /dev/sda, see lsblk)\n\n./archstrap.sh [DRIVE]\n\n" && exit
 [ ! -b "$1" ] && printf "Drive $1 is not a valid block device.\n" && exit
 
 printf "\nThis script will erase all data on $1.\nAre you certain? (y/n): " && read CERTAIN
 [ "$CERTAIN" != "y" ] && printf "Abort." && exit
+
+# Checks if virtual machine argument is valid
+is_virtual=false
+if [ -z "$2" || "$2" != "-v" ]
+then
+        printf "This machine will considered as a normal host machine"
+else
+        is_virtual=true
+        printf"This machine will considered as a virtualbox machine"
+fi
 
 disk=$1
 swap=${disk}1
@@ -43,6 +54,10 @@ arch-chroot /mnt sh -c 'chsh -s $(which zsh)'
 arch-chroot /mnt sh -c 'curl https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh | sh'
 arch-chroot /mnt sh -c 'cd /root; git clone https://github.com/charlescaseymartin/archlinux-moded-dotfiles.git'
 arch-chroot /mnt sh -c 'cd /root/archlinux-moded-dotfiles; sh install.sh -i'
-
+if $is_virtual
+then
+        arch-chroot /mnt sh -c 'pacman -S virtualbox-guest-utils --noconfirm; systemctl enable vboxservice.service'
+        arch-chroot /mnt sh -c 'VBoxClient --clipboard; VBoxClient --seamless'
+fi
 
 printf "*--- Installation Complete! ---*"
