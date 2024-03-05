@@ -43,10 +43,10 @@ pacman -S jq --noconfirm
 user=$(jq -r '.["!users"][0].username' <<< cat ./creds.json)
 
 arch-chroot /mnt sh -c '
+        su "$user"
         systemctl enable ufw.service;
         systemctl enable NetworkManager;
         chsh -s $(which zsh);
-        cd /home/"$user";
         curl https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh | sh;
         git clone https://github.com/charlescaseymartin/archlinux-moded-dotfiles.git;
         cd ~/archlinux-moded-dotfiles;
@@ -57,7 +57,7 @@ if [ "$2" == "-v" ]
 then
         printf "\nConfiguring virtualbox environment..."
         arch-chroot /mnt sh -c '
-                cd /home/"$user"
+                su "$user"
                 pacman -S virtualbox-guest-utils --noconfirm;
                 systemctl enable vboxservice.service;
                 systemctl start vboxservice.service;
