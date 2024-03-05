@@ -46,6 +46,7 @@ arch-chroot -u $user /mnt sh -c '
         current_user="$whoami"
         HOME="/home/'$(whoami)'";
         echo $HOME;
+        echo $current_user;
         cd;
         printf "Current user: $(whoami)\n";
         '
