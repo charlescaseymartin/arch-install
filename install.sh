@@ -43,7 +43,9 @@ pacman -S jq --noconfirm
 user=$(jq -r '.["!users"][0].username' <<< cat ./creds.json)
 
 arch-chroot /mnt sh -c '
+        printf "Switching to user: $user"
         su "$user"
+        cd $HOME
         systemctl enable ufw.service;
         systemctl enable NetworkManager;
         chsh -s $(which zsh);
