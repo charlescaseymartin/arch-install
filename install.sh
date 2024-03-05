@@ -15,28 +15,28 @@ boot=${disk}2
 root=${disk}3
 
 # Cleanup from previous runs.
-[ -b "$swap" ] && swapoff $swap
-umount -R /mnt
-
-# Partition 1G for boot, 1G for swap, rest for root.
-# Optimal alignment will change the exact size though!
-parted -s $disk mklabel gpt
-parted -sa optimal $disk mkpart primary linux-swap 0% 1G
-parted -sa optimal $disk mkpart primary fat32 1G 2G
-parted -sa optimal $disk mkpart primary ext4 2G 100%
-parted -s $disk set 2 esp on
-
-# Format the partitions.
-mkfs.ext4 -F $root
-mkfs.fat -F 32 $boot
-mkswap $swap
-
-# Mount the partitions.
-mount $root /mnt
-mount --mkdir $boot /mnt/boot
-swapon $swap
-
-archinstall --config ./config.json --creds ./creds.json
+#[ -b "$swap" ] && swapoff $swap
+#umount -R /mnt
+#
+## Partition 1G for boot, 1G for swap, rest for root.
+## Optimal alignment will change the exact size though!
+#parted -s $disk mklabel gpt
+#parted -sa optimal $disk mkpart primary linux-swap 0% 1G
+#parted -sa optimal $disk mkpart primary fat32 1G 2G
+#parted -sa optimal $disk mkpart primary ext4 2G 100%
+#parted -s $disk set 2 esp on
+#
+## Format the partitions.
+#mkfs.ext4 -F $root
+#mkfs.fat -F 32 $boot
+#mkswap $swap
+#
+## Mount the partitions.
+#mount $root /mnt
+#mount --mkdir $boot /mnt/boot
+#swapon $swap
+#
+#archinstall --config ./config.json --creds ./creds.json
 
 # Install configs and environment
 pacman -S jq --noconfirm
