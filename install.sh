@@ -41,14 +41,14 @@ archinstall --config ./config.json --creds ./creds.json
 # Install configs and environment
 pacman -S jq --noconfirm
 user=$(jq -r '.["!users"][0].username' <<< cat ./creds.json)
+printf "creds user: $(user)\n";
 
 arch-chroot -u $user /mnt sh -c '
-        current_user="$whoami"
-        HOME="/home/'$(whoami)'";
-        echo $HOME;
-        echo "$current_user";
-        cd;
         printf "whoami user: $(whoami)\n";
+        current_user="$whoami"
+        echo "$current_user";
+        HOME="/home/$(whoami)";
+        printf "home directory: $(HOME)\n";
         '
 
 #arch-chroot /mnt sh -c '
