@@ -42,10 +42,9 @@ archinstall --config ./config.json --creds ./creds.json
 pacman -S jq --noconfirm
 user=$(jq -r '.["!users"][0].username' <<< cat ./creds.json)
 
-arch-chroot /mnt sh -c '
-        printf "Switching to user: '$user'\n";
-        su - "'$user'";
-        echo "'$HOME'"'
+arch-chroot -u $user /mnt sh -c '
+        printf "Current user: $(whoami)";
+        echo $HOME'
 
 #arch-chroot /mnt sh -c '
 #        printf "Switching to user: $user"
