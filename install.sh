@@ -46,7 +46,7 @@ arch-chroot /mnt sh -c '
         systemctl enable ufw.service;
         systemctl enable NetworkManager;
         chsh -s $(which zsh);
-        cd "/home/$user";
+        cd /home/"$user";
         curl https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh | sh;
         git clone https://github.com/charlescaseymartin/archlinux-moded-dotfiles.git;
         cd ~/archlinux-moded-dotfiles;
@@ -57,7 +57,7 @@ if [ "$2" == "-v" ]
 then
         printf "\nConfiguring virtualbox environment..."
         arch-chroot /mnt sh -c '
-                cd "/home/$user"
+                cd /home/"$user"
                 pacman -S virtualbox-guest-utils --noconfirm;
                 systemctl enable vboxservice.service;
                 systemctl start vboxservice.service;
