@@ -36,7 +36,7 @@ mount $root /mnt
 mount --mkdir $boot /mnt/boot
 swapon $swap
 
-#archinstall --config ./config.json --creds ./creds.json
+archinstall --config ./config.json --creds ./creds.json
 
 # Install configs and environment
 pacman -S jq --noconfirm
