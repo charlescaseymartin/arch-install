@@ -44,11 +44,12 @@ user=$(jq -r '.["!users"][0].username' <<< cat ./creds.json)
 printf "creds user: $(user)\n";
 
 arch-chroot -u $user /mnt sh -c '
-        printf "whoami user: $(whoami)\n";
+        printf "whoami user: " "$whoami" "\n";
         current_user="$whoami"
         echo "$current_user";
+        printf "current_user: " "$current_user" "\n";
         HOME="/home/$(whoami)";
-        printf "home directory: $(HOME)\n";
+        printf "home directory: " "$HOME" "\n";
         '
 
 #arch-chroot /mnt sh -c '
