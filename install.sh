@@ -43,9 +43,9 @@ pacman -S jq --noconfirm
 user=$(jq -r '.["!users"][0].username' <<< cat ./creds.json)
 
 arch-chroot -u $user /mnt sh -c '
-        HOME="/home/'$whoami'";
+        HOME="/home/'$(whoami)'";
         cd;
-        printf "Current user: $(whoami)";
+        printf "Current user: $(whoami)\n";
         echo $HOME'
 
 #arch-chroot /mnt sh -c '
