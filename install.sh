@@ -73,7 +73,6 @@ arch-chroot /mnt sh -c \
 	systemctl enable NetworkManager;
 
 	sed -i "s/# %wheel ALL=(ALL:ALL) ALL/ %wheel ALL=(ALL:ALL) ALL" /etc/sudoers
-	cat /etc/sudoers | less
 
 	echo "root:'$rootpass'" | chpasswd;
 	useradd -m "'$username'"
