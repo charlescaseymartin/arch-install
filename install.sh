@@ -37,17 +37,21 @@ swapon $swap
 
 # Setup Username and Password
 set +xv
-read -s -p "Enter host name: " hostname
-[ -z "$hostname" ] && printf "\nEntered invalid host name!" && exit
+read -s "Enter host name: " hostname
+[ -z "$hostname" ] && echo "" && printf "Entered invalid host name!" && exit
+echo ""
 
 read -s -p "Enter root user password: " rootpass
-[ -z "$rootpass" ] && printf "\nEntered invalid root user password!" && exit
+[ -z "$rootpass" ] && echo "" && printf "Entered invalid root user password!" && exit
+echo ""
 
-read -p "\nEnter username: " username
-[ -z "$username" ] && printf "\nEntered invalid username!" && exit
+read -p "Enter username: " username
+[ -z "$username" ] && echo "" && printf "Entered invalid username!" && exit
+echo ""
 
 read -s -p "Enter user password: " userpass
-[ -z "$userpass" ] && printf "\nEntered invalid user password!" && exit
+[ -z "$userpass" ] && echo "" && printf "Entered invalid user password!" && exit
+echo ""
 
 # Packages and chroot. 
 pacstrap /mnt linux linux-firmware ufw networkmanager neovim base base-devel git man efibootmgr grub 
