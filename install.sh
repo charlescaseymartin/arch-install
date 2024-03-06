@@ -72,7 +72,7 @@ arch-chroot /mnt sh -c \
 	systemctl enable ufw; 
 	systemctl enable NetworkManager;
 
-	sed -i "s/# %wheel ALL=(ALL:ALL) ALL/ %wheel ALL=(ALL:ALL) ALL" /etc/sudoers
+	sed -i "s/^#\s%wheel\sALL=(ALL:ALL)\sALL/\s%wheel\sALL=(ALL:ALL)\sALL" /etc/sudoers
 
 	echo "root:'$rootpass'" | chpasswd;
 	useradd -m "'$username'"
