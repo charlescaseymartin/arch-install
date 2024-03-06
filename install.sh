@@ -70,10 +70,15 @@ arch-chroot /mnt sh -c \
 	hwclock --systohc;
 
 	systemctl enable ufw; 
-	systemctl enable NetworkManager; 
+	systemctl enable NetworkManager;
 
-	echo "root:'$(rootpass)'" | chpasswd; 
-	echo "'$(username)':'$(userpass)'" | chpasswd; 
+	sed -i "s/# %wheel ALL=(ALL:ALL) ALL/ %wheel ALL=(ALL:ALL) ALL" /etc/sudoers
+	cat /etc/sudoers | less
+
+	echo "root:'$rootpass'" | chpasswd;
+	useradd -m "'$username'"
+	usermod -aG wheel,audio,video,storage "'$username'"
+	echo "'$username':'$userpass'" | chpasswd; 
 	
 	echo "'$hostname'" > /etc/hostname;
 	echo "127.0.0.1	localhost.localdomain   localhost" >> /etc/hosts;
