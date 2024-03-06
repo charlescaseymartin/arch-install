@@ -36,25 +36,25 @@ mount --mkdir $boot /mnt/boot
 swapon $swap
 
 # Setup Username and Password
-hostname="arch-clone"
-
 set +xv
+read -s -p "Enter host name: " hostname
+[ -z "$hostname" ] && printf "\nEntered invalid host name!" && exit
+
 read -s -p "Enter root user password: " rootpass
-[ -z "$rootpass" ] && printf "\nEnter valid root user password!" && exit
+[ -z "$rootpass" ] && printf "\nEntered invalid root user password!" && exit
 
 read -p "\nEnter username: " username
-[ -z "$username" ] && printf "\nEnter valid username!" && exit
+[ -z "$username" ] && printf "\nEntered invalid username!" && exit
 
 read -s -p "Enter user password: " userpass
-[ -z "$userpass" ] && printf "\nEnter valid user password!" && exit
-
-
+[ -z "$userpass" ] && printf "\nEntered invalid user password!" && exit
 
 # Packages and chroot. 
 pacstrap /mnt linux linux-firmware ufw networkmanager neovim base base-devel git man efibootmgr grub 
 genfstab -U /mnt > /mnt/etc/fstab 
 
 # Enter the system and set up basic locale and bootloader.
+#echo -e "127.0.0.1	localhost.localdomain   localhost\n::1		localhost.localdomain   localhost\n127.0.0.1    '$hostname'.localdomain    '$hostname'" > /etc/hosts; 
 arch-chroot /mnt sh -c \
 	'
 	set -xe; 
@@ -68,11 +68,13 @@ arch-chroot /mnt sh -c \
 	systemctl enable ufw; 
 	systemctl enable NetworkManager; 
 
-	echo "root:$(rootpass)" | chpasswd; 
-	echo "$(username):$(userpass)" | chpasswd; 
+	echo "root:'$(rootpass)'" | chpasswd; 
+	echo "'$(username)':'$(userpass)'" | chpasswd; 
 	
-	echo "$hostname" > /etc/hostname;
-	echo -e "127.0.0.1	localhost.localdomain   localhost\n::1		localhost.localdomain   localhost\n127.0.0.1    $hostname.localdomain    $hostname" > /etc/hosts; 
+	echo "'$hostname'" > /etc/hostname;
+	echo "127.0.0.1	localhost.localdomain   localhost" >> /etc/hosts;
+	echo "::1		localhost.localdomain   localhost" >> /etc/hosts;
+	echo "127.0.0.1    '$hostname'.localdomain    '$hostname'" >> /etc/hosts;
 
 	grub-install --target=x86_64-efi --efi-directory=/boot --bootloader-id=GRUB; 
 	grub-mkconfig -o /boot/grub/grub.cfg;
