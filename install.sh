@@ -37,7 +37,7 @@ swapon $swap
 
 # Setup Username and Password
 set +xv
-read -s "Enter host name: " hostname
+read -p "Enter host name: " hostname
 [ -z "$hostname" ] && echo "" && printf "Entered invalid host name!" && exit
 echo ""
 
