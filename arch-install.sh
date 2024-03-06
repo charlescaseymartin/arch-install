@@ -53,11 +53,18 @@ read -s -p "Enter user password: " userpass
 [ -z "$userpass" ] && echo "" && printf "Entered invalid user password!" && exit
 echo ""
 
-# Packages and chroot.
-pacstrap /mnt linux linux-firmware ufw networkmanager neovim base base-devel git man efibootmgr grub
+# Packages, time sync and fstab.
+timedatectl set-ntp true
+
+pacstrap /mnt \
+	linux-hardened linux-hardened-headers linux-firmware efibootmgr grub \
+	networkmanager network-manager-applet networkmanager-openvpn ufw man pulseaudio pavucontrol \
+	base base-devel zsh git neovim docker openvpn \
+	rofi tmux firefox curl ttf-bigblueterminal-nerd
+
 genfstab -U /mnt > /mnt/etc/fstab
 
-# Setup basic Arch Linux system.
+# Configuring system.
 arch-chroot /mnt sh -c \
 	'
 	set -xe;
@@ -68,15 +75,17 @@ arch-chroot /mnt sh -c \
 	ln -sf /usr/share/zoneinfo/Africa/Johannesburg /etc/localtime;
 	hwclock --systohc;
 
-	systemctl enable ufw;
+	systemctl enable ufw.service;
 	systemctl enable NetworkManager;
+	systemctl enable docker.service;
+	systemctl enable pulseaudio.service;
 
 	sed -i "s/^#\s*\(%wheel\s\+ALL=(ALL:ALL)\s\+ALL\)/\1/" /etc/sudoers
 
 	set +xv;
 	echo "root:'$rootpass'" | chpasswd;
 	useradd -m "'$username'"
-	usermod -aG wheel,audio,video,storage "'$username'"
+	usermod -aG wheel,audio,video,storage,power,docker "'$username'"
 	echo "'$username':'$userpass'" | chpasswd;
 
 	set -xe;
@@ -85,15 +94,9 @@ arch-chroot /mnt sh -c \
 	echo "::1		localhost.localdomain   localhost" >> /etc/hosts;
 	echo "127.0.0.1    '$hostname'.localdomain    '$hostname'" >> /etc/hosts;
 
+	mkinitcpio -p linux-hardened
 	grub-install --target=x86_64-efi --efi-directory=/boot --bootloader-id=GRUB;
 	grub-mkconfig -o /boot/grub/grub.cfg;
-	'
-
-# Setup system customizations
-arch-chroot /mnt sh -c \
-	'
-	set -xe;
-	
 	'
 
 # Finalize. 
