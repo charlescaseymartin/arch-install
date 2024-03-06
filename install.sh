@@ -50,6 +50,8 @@ arch-chroot -u $user /mnt sh -c '
         HOME="/home/"$whoami;
         echo -e "\nhome directory:" $HOME;
         '
+read -p "Enter username: " username
+[ -z "$username" ] && printf "\nEnter valid username!" && exit
 
 #arch-chroot /mnt sh -c '
 #        printf "Switching to user: $user"
