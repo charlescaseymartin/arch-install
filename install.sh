@@ -53,24 +53,22 @@ read -s -p "Enter user password: " userpass
 [ -z "$userpass" ] && echo "" && printf "Entered invalid user password!" && exit
 echo ""
 
-# Packages and chroot. 
-pacstrap /mnt linux linux-firmware ufw networkmanager neovim base base-devel git man efibootmgr grub 
-genfstab -U /mnt > /mnt/etc/fstab 
+# Packages and chroot.
+pacstrap /mnt linux linux-firmware ufw networkmanager neovim base base-devel git man efibootmgr grub
+genfstab -U /mnt > /mnt/etc/fstab
 
-# Enter the system and set up basic locale and bootloader.
-#echo -e "127.0.0.1	localhost.localdomain   localhost\n::1		localhost.localdomain   localhost\n127.0.0.1    '$hostname'.localdomain    '$hostname'" > /etc/hosts; 
-#s/^#\s*\(%wheel\s\+ALL=(ALL)\s\+NOPASSWD:\s\+ALL\)/\1/
+# Setup basic Arch Linux system.
 arch-chroot /mnt sh -c \
 	'
-	set -xe; 
-	sed -i "s/^#en_US.UTF-8/en_US.UTF-8/g" /etc/locale.gen; 
+	set -xe;
+	sed -i "s/^#en_US.UTF-8/en_US.UTF-8/g" /etc/locale.gen;
 	
-	echo "LANG=en_US.UTF-8" > /etc/locale.conf; 
-	locale-gen; 
-	ln -sf /usr/share/zoneinfo/Africa/Johannesburg /etc/localtime; 
+	echo "LANG=en_US.UTF-8" > /etc/locale.conf;
+	locale-gen;
+	ln -sf /usr/share/zoneinfo/Africa/Johannesburg /etc/localtime;
 	hwclock --systohc;
 
-	systemctl enable ufw; 
+	systemctl enable ufw;
 	systemctl enable NetworkManager;
 
 	sed -i "s/^#\s*\(%wheel\s\+ALL=(ALL:ALL)\s\+ALL\)/\1/" /etc/sudoers
@@ -79,7 +77,7 @@ arch-chroot /mnt sh -c \
 	echo "root:'$rootpass'" | chpasswd;
 	useradd -m "'$username'"
 	usermod -aG wheel,audio,video,storage "'$username'"
-	echo "'$username':'$userpass'" | chpasswd; 
+	echo "'$username':'$userpass'" | chpasswd;
 
 	set -xe;
 	echo "'$hostname'" > /etc/hostname;
@@ -87,10 +85,18 @@ arch-chroot /mnt sh -c \
 	echo "::1		localhost.localdomain   localhost" >> /etc/hosts;
 	echo "127.0.0.1    '$hostname'.localdomain    '$hostname'" >> /etc/hosts;
 
-	grub-install --target=x86_64-efi --efi-directory=/boot --bootloader-id=GRUB; 
+	grub-install --target=x86_64-efi --efi-directory=/boot --bootloader-id=GRUB;
 	grub-mkconfig -o /boot/grub/grub.cfg;
+	'
+
+# Setup system customizations
+arch-chroot /mnt sh -c \
+	'
+	set -xe;
+	
 	'
 
 # Finalize. 
 umount -R /mnt
-set +xe printf "*--- Installation Complete! ---*"
+set +xe 
+printf "*--- Installation Complete! ---*"
