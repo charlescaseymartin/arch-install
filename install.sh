@@ -59,6 +59,7 @@ genfstab -U /mnt > /mnt/etc/fstab
 
 # Enter the system and set up basic locale and bootloader.
 #echo -e "127.0.0.1	localhost.localdomain   localhost\n::1		localhost.localdomain   localhost\n127.0.0.1    '$hostname'.localdomain    '$hostname'" > /etc/hosts; 
+#s/^#\s*\(%wheel\s\+ALL=(ALL)\s\+NOPASSWD:\s\+ALL\)/\1/
 arch-chroot /mnt sh -c \
 	'
 	set -xe; 
@@ -72,7 +73,7 @@ arch-chroot /mnt sh -c \
 	systemctl enable ufw; 
 	systemctl enable NetworkManager;
 
-	sed -i "s/^#\s%wheel\sALL=(ALL:ALL)\sALL/\s%wheel\sALL=(ALL:ALL)\sALL" /etc/sudoers
+	sed -i "s/^#\s*\(%wheel\s\+ALL=(ALL:ALL)\s\+ALL\)/\1/" /etc/sudoers
 
 	echo "root:'$rootpass'" | chpasswd;
 	useradd -m "'$username'"
