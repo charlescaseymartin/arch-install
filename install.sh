@@ -75,11 +75,13 @@ arch-chroot /mnt sh -c \
 
 	sed -i "s/^#\s*\(%wheel\s\+ALL=(ALL:ALL)\s\+ALL\)/\1/" /etc/sudoers
 
+	set +xv;
 	echo "root:'$rootpass'" | chpasswd;
 	useradd -m "'$username'"
 	usermod -aG wheel,audio,video,storage "'$username'"
 	echo "'$username':'$userpass'" | chpasswd; 
-	
+
+	set -xe;
 	echo "'$hostname'" > /etc/hostname;
 	echo "127.0.0.1	localhost.localdomain   localhost" >> /etc/hosts;
 	echo "::1		localhost.localdomain   localhost" >> /etc/hosts;
