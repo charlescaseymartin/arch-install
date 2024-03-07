@@ -65,7 +65,7 @@ genfstab -U /mnt > /mnt/etc/fstab
 
 # Check if install is for Virtualbox machine
 is_virtual="false"
-[ "$2" == "-v" ] && is_virtual="true"
+[ ! -z "$2" && "$2" == "-v" ] && is_virtual="true"
 
 # Configuring system.
 arch-chroot /mnt sh -c \
@@ -103,7 +103,7 @@ arch-chroot /mnt sh -c \
 	cd /tmp
 	git clone https://aur.archlinux.org/yay.git;
 	cd yay;
-	sudo -u steve makepkg -si;
+	sudo -u "'$username'" makepkg -si;
 	cd;
 
 	set +xe
