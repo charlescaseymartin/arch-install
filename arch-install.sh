@@ -84,7 +84,7 @@ arch-chroot /mnt sh -c \
 
 	sed -i "s/^#\s*\(%wheel\s\+ALL=(ALL:ALL)\s\+ALL\)/\1/" /etc/sudoers
 
-	set +xv;
+	set +xe;
 	echo "root:'$rootpass'" | chpasswd;
 	useradd -m "'$username'"
 	usermod -aG wheel,audio,video,storage,power,docker "'$username'"
@@ -100,6 +100,7 @@ arch-chroot /mnt sh -c \
 	grub-install --target=x86_64-efi --efi-directory=/boot --bootloader-id=GRUB;
 	grub-mkconfig -o /boot/grub/grub.cfg;
 
+	set +xe
 	[ "'$is_virtual'" == "true" ] && \
 		echo "Install open source graphics and configure vbox guest machine"; \
 	
