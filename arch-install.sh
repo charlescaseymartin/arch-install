@@ -37,7 +37,7 @@ swapon $swap
 
 # Setup Username and Password
 set +xv
-read -p "Enter host name: " hostname
+read -p "\nEnter host name: " hostname
 [ -z "$hostname" ] && echo "" && printf "Entered invalid host name!" && exit
 echo ""
 
@@ -63,6 +63,10 @@ pacstrap /mnt \
 	rofi tmux firefox curl ttf-bigblueterminal-nerd
 
 genfstab -U /mnt > /mnt/etc/fstab
+
+# Check if install is for Virtualbox machine
+is_virtual="false"
+[ "$2" == "-v" ] && is_virtual="true"
 
 # Configuring system.
 arch-chroot /mnt sh -c \
@@ -96,9 +100,15 @@ arch-chroot /mnt sh -c \
 	mkinitcpio -p linux-hardened
 	grub-install --target=x86_64-efi --efi-directory=/boot --bootloader-id=GRUB;
 	grub-mkconfig -o /boot/grub/grub.cfg;
+
+	[ "'$is_virtual'" == "true" ]; && \
+		echo "Install open source graphics and configure vbox guest machine"; \
+	
+	[ "'$is_virtual'" != "true" ]; && \
+		echo "Install nvidia graphics"
 	'
 
 # Finalize. 
 umount -R /mnt
-set +xe 
+swapoff $swap
 printf "*--- Installation Complete! ---*"
