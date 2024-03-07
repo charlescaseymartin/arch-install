@@ -100,10 +100,10 @@ arch-chroot /mnt sh -c \
 	grub-install --target=x86_64-efi --efi-directory=/boot --bootloader-id=GRUB;
 	grub-mkconfig -o /boot/grub/grub.cfg;
 
-	cd /opt;
+	cd /tmp
 	git clone https://aur.archlinux.org/yay.git;
 	cd yay;
-	makepkg -si;
+	sudo -u steve makepkg -si;
 	cd;
 
 	set +xe
