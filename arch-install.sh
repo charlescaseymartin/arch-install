@@ -100,10 +100,10 @@ arch-chroot /mnt sh -c \
 	grub-install --target=x86_64-efi --efi-directory=/boot --bootloader-id=GRUB;
 	grub-mkconfig -o /boot/grub/grub.cfg;
 
-	[ "'$is_virtual'" == "true" ]; && \
+	[ "'$is_virtual'" == "true" ] && \
 		echo "Install open source graphics and configure vbox guest machine"; \
 	
-	[ "'$is_virtual'" != "true" ]; && \
+	[ "'$is_virtual'" != "true" ] && \
 		echo "Install nvidia graphics"
 	'
 
