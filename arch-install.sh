@@ -78,7 +78,6 @@ arch-chroot /mnt sh -c \
 	systemctl enable ufw.service;
 	systemctl enable NetworkManager;
 	systemctl enable docker.service;
-	systemctl enable pulseaudio.service;
 
 	sed -i "s/^#\s*\(%wheel\s\+ALL=(ALL:ALL)\s\+ALL\)/\1/" /etc/sudoers
 
