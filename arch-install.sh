@@ -40,7 +40,6 @@ set +xv
 echo ""
 read -p "Enter host name: " hostname
 [ -z "$hostname" ] && echo "" && printf "Entered invalid host name!" && exit
-echo ""
 
 read -s -p "Enter root user password: " rootpass
 [ -z "$rootpass" ] && echo "" && printf "Entered invalid root user password!" && exit
@@ -48,11 +47,10 @@ echo ""
 
 read -p "Enter username: " username
 [ -z "$username" ] && echo "" && printf "Entered invalid username!" && exit
-echo ""
 
 read -s -p "Enter user password: " userpass
 [ -z "$userpass" ] && echo "" && printf "Entered invalid user password!" && exit
-echo ""
+echo -e "\n"
 
 # Packages, time sync and fstab.
 timedatectl set-ntp true
