@@ -96,12 +96,11 @@ arch-chroot /mnt sh -c \
 	echo "::1		localhost.localdomain   localhost" >> /etc/hosts;
 	echo "127.0.0.1    '$hostname'.localdomain    '$hostname'" >> /etc/hosts;
 
-	mkinitcpio -p linux-hardened
 	grub-install --target=x86_64-efi --efi-directory=/boot --bootloader-id=GRUB;
 	grub-mkconfig -o /boot/grub/grub.cfg;
 
 	cd /tmp
-	git clone https://aur.archlinux.org/yay.git;
+	sudo -u "'$username'" git clone https://aur.archlinux.org/yay.git;
 	cd yay;
 	sudo -u "'$username'" makepkg -si;
 	cd;
