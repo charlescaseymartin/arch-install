@@ -102,10 +102,12 @@ arch-chroot /mnt sh -c \
 
 	set +xe
 	[ "'$is_virtual'" == "true" ] && \
-		echo "Install open source graphics and configure vbox guest machine"; \
+		echo "Install open source graphics"; \
+		echo "Configure vbox guest machine"; \
 	
 	[ "'$is_virtual'" != "true" ] && \
-		echo "Install nvidia graphics"
+		echo "Install nvidia graphics";
+		echo "And that is all folks!"
 	'
 
 # Finalize. 
