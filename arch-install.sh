@@ -35,37 +35,44 @@ mount $root /mnt
 mount --mkdir $boot /mnt/boot
 swapon $swap
 
-# Setup Username and Password
-set +xv
-echo ""
-read -p "Enter host name: " hostname
-[ -z "$hostname" ] && echo "" && printf "Entered invalid host name!" && exit
-
-read -s -p "Enter root user password: " rootpass
-[ -z "$rootpass" ] && echo "" && printf "Entered invalid root user password!" && exit
-echo ""
-
-read -p "Enter username: " username
-[ -z "$username" ] && echo "" && printf "Entered invalid username!" && exit
-
-read -s -p "Enter user password: " userpass
-[ -z "$userpass" ] && echo "" && printf "Entered invalid user password!" && exit
-echo -e "\n"
+## Setup Username and Password
+#set +xv
+#echo ""
+#read -p "Enter host name: " hostname
+#[ -z "$hostname" ] && echo "" && printf "Entered invalid host name!" && exit
+#
+#read -s -p "Enter root user password: " rootpass
+#[ -z "$rootpass" ] && echo "" && printf "Entered invalid root user password!" && exit
+#echo ""
+#
+#read -p "Enter username: " username
+#[ -z "$username" ] && echo "" && printf "Entered invalid username!" && exit
+#
+#read -s -p "Enter user password: " userpass
+#[ -z "$userpass" ] && echo "" && printf "Entered invalid user password!" && exit
+#echo -e "\n"
 
 # Packages, time sync and fstab.
 timedatectl set-ntp true
 
+#pacstrap /mnt \
+#	linux-hardened linux-hardened-headers linux-firmware efibootmgr grub \
+#	networkmanager network-manager-applet networkmanager-openvpn ufw man pulseaudio pavucontrol \
+#	base base-devel zsh git neovim docker openvpn \
+#	rofi tmux firefox curl ttf-bigblueterminal-nerd
 pacstrap /mnt \
 	linux-hardened linux-hardened-headers linux-firmware efibootmgr grub \
-	networkmanager network-manager-applet networkmanager-openvpn ufw man pulseaudio pavucontrol \
-	base base-devel zsh git neovim docker openvpn \
-	rofi tmux firefox curl ttf-bigblueterminal-nerd
+	#networkmanager network-manager-applet networkmanager-openvpn ufw man pulseaudio pavucontrol \
+	base base-devel #zsh git neovim docker openvpn \
+	#rofi tmux firefox curl ttf-bigblueterminal-nerd
 
 genfstab -U /mnt > /mnt/etc/fstab
 
 # Check if install is for Virtualbox machine
 is_virtual="false"
 [ ! -z "$2" && "$2" == "-v" ] && echo "This is a vbox setup" && is_virtual="true"
+
+arch-chroot /mnt sh -c 'Is this a vbox setup: "'$is_virtual'"'
 
 # Configuring system.
 #arch-chroot /mnt sh -c \
