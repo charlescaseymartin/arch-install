@@ -101,15 +101,15 @@ arch-chroot /mnt sh -c \
 	grub-install --target=x86_64-efi --efi-directory=/boot --bootloader-id=GRUB;
 	grub-mkconfig -o /boot/grub/grub.cfg;
 
+	sed -i \
+		"s/#guest-session=/guest-session=lightdm-slick-greeter/" \
+		/etc/lightdm/lightdm.conf
+
 	cd /tmp
 	sudo -u "'$username'" git clone https://aur.archlinux.org/yay.git;
 	cd yay;
 	sudo -u "'$username'" makepkg -si;
 	cd;
-
-	sed -i \
-		"s/#guest-session=/guest-session=lightdm-slick-greeter/" \
-		/etc/lightdm/lightdm.conf
 
 	set +xe
 	[ "'$is_virtual'" == "true" ] && \
