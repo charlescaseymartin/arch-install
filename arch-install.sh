@@ -107,6 +107,10 @@ arch-chroot /mnt sh -c \
 	sudo -u "'$username'" makepkg -si;
 	cd;
 
+	sed -i \
+		"s/#guest-session=/guest-session=lightdm-slick-greeter/" \
+		/etc/lightdm/lightdm.conf
+
 	set +xe
 	[ "'$is_virtual'" == "true" ] && \
 		yay -S virtualbox-guest-utils --noconfirm && \
