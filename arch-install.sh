@@ -102,9 +102,8 @@ arch-chroot /mnt sh -c \
 	grub-mkconfig -o /boot/grub/grub.cfg;
 
 	sed -i \
-		"s/#guest-session=/guest-session=lightdm-slick-greeter/" \
+		"s/#greeter-session=example-gtk-gnome/greeter-session=lightdm-slick-greeter/" \
 		/etc/lightdm/lightdm.conf;
-	sed -i "s/#logind-check-graphical=true/logind-check-graphical=true/" /etc/lightdm/lightdm.conf;
 	sed -i "s/#autologin-session=/autologin-session=i3/g" /etc/lightdm/lightdm.conf
 	sed -i "s/^twm\s*&//g" /etc/X11/xinit/xinitrc
 	sed -i "s/^xclock\s*-geometry\s*50x50-1+1\s*&//g" /etc/X11/xinit/xinitrc
