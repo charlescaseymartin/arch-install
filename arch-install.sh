@@ -105,7 +105,13 @@ arch-chroot /mnt sh -c \
 		"s/#guest-session=/guest-session=lightdm-slick-greeter/" \
 		/etc/lightdm/lightdm.conf;
 	sed -i "s/#autologin-session=/autologin-session=i3/g" /etc/lightdm/lightdm.conf
-	sed -i "s/^exec\s*/exec i3/g" /etc/X11/xinit/xinitrc
+	sed -i "s/^twm\s*&//g" /etc/X11/xinit/xinitrc
+	sed -i "s/^xclock\s*-geometry\s*50x50-1+1\s*&//g" /etc/X11/xinit/xinitrc
+	sed -i "s/^xterm\s*-geometry\s*80x50+494+51\s*&//g" /etc/X11/xinit/xinitrc
+	sed -i "s/^xterm\s*-geometry\s*80x20+494-0\s*&//g" /etc/X11/xinit/xinitrc
+	sed -i \
+		"s/^exec\s*xterm\s*-geometry\s*80x66+0+0\s*-name\s*login/exec i3/g" \
+		/etc/X11/xinit/xinitrc
 
 	cd /tmp
 	sudo -u "'$username'" git clone https://aur.archlinux.org/yay.git;
