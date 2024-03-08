@@ -35,36 +35,31 @@ mount $root /mnt
 mount --mkdir $boot /mnt/boot
 swapon $swap
 
-## Setup Username and Password
-#set +xv
-#echo ""
-#read -p "Enter host name: " hostname
-#[ -z "$hostname" ] && echo "" && printf "Entered invalid host name!" && exit
-#
-#read -s -p "Enter root user password: " rootpass
-#[ -z "$rootpass" ] && echo "" && printf "Entered invalid root user password!" && exit
-#echo ""
-#
-#read -p "Enter username: " username
-#[ -z "$username" ] && echo "" && printf "Entered invalid username!" && exit
-#
-#read -s -p "Enter user password: " userpass
-#[ -z "$userpass" ] && echo "" && printf "Entered invalid user password!" && exit
-#echo -e "\n"
+# Setup Username and Password
+set +xv
+echo ""
+read -p "Enter host name: " hostname
+[ -z "$hostname" ] && echo "" && printf "Entered invalid host name!" && exit
+
+read -s -p "Enter root user password: " rootpass
+[ -z "$rootpass" ] && echo "" && printf "Entered invalid root user password!" && exit
+echo ""
+
+read -p "Enter username: " username
+[ -z "$username" ] && echo "" && printf "Entered invalid username!" && exit
+
+read -s -p "Enter user password: " userpass
+[ -z "$userpass" ] && echo "" && printf "Entered invalid user password!" && exit
+echo -e "\n"
 
 # Packages, time sync and fstab.
 timedatectl set-ntp true
 
-#pacstrap /mnt \
-#	linux-hardened linux-hardened-headers linux-firmware efibootmgr grub \
-#	networkmanager network-manager-applet networkmanager-openvpn ufw man pulseaudio pavucontrol \
-#	base base-devel zsh git neovim docker openvpn \
-#	rofi tmux firefox curl ttf-bigblueterminal-nerd
 pacstrap /mnt \
 	linux-hardened linux-hardened-headers linux-firmware efibootmgr grub \
-	#networkmanager network-manager-applet networkmanager-openvpn ufw man pulseaudio pavucontrol \
-	base base-devel #zsh git neovim docker openvpn \
-	#rofi tmux firefox curl ttf-bigblueterminal-nerd
+	networkmanager network-manager-applet networkmanager-openvpn ufw man pulseaudio pavucontrol \
+	base base-devel zsh git neovim docker openvpn \
+	rofi tmux firefox curl ttf-bigblueterminal-nerd
 
 genfstab -U /mnt > /mnt/etc/fstab
 
@@ -72,54 +67,52 @@ genfstab -U /mnt > /mnt/etc/fstab
 is_virtual="false"
 [ ! -z "$2" ] && [ "$2" == "-v" ] && echo "This is a vbox setup" && is_virtual="true"
 
-arch-chroot /mnt sh -c 'Is this a vbox setup: "'$is_virtual'"'
-
 # Configuring system.
-#arch-chroot /mnt sh -c \
-#	'
-#	set -xe;
-#	sed -i "s/^#en_US.UTF-8/en_US.UTF-8/g" /etc/locale.gen;
-#	
-#	echo "LANG=en_US.UTF-8" > /etc/locale.conf;
-#	locale-gen;
-#	ln -sf /usr/share/zoneinfo/Africa/Johannesburg /etc/localtime;
-#	hwclock --systohc;
-#
-#	systemctl enable ufw.service;
-#	systemctl enable NetworkManager;
-#	systemctl enable docker.service;
-#
-#	sed -i "s/^#\s*\(%wheel\s\+ALL=(ALL:ALL)\s\+ALL\)/\1/" /etc/sudoers
-#
-#	set +xe;
-#	echo "root:'$rootpass'" | chpasswd;
-#	useradd -m "'$username'"
-#	usermod -aG wheel,audio,video,storage,power,docker "'$username'"
-#	echo "'$username':'$userpass'" | chpasswd;
-#
-#	set -xe;
-#	echo "'$hostname'" > /etc/hostname;
-#	echo "127.0.0.1	localhost.localdomain   localhost" >> /etc/hosts;
-#	echo "::1		localhost.localdomain   localhost" >> /etc/hosts;
-#	echo "127.0.0.1    '$hostname'.localdomain    '$hostname'" >> /etc/hosts;
-#
-#	grub-install --target=x86_64-efi --efi-directory=/boot --bootloader-id=GRUB;
-#	grub-mkconfig -o /boot/grub/grub.cfg;
-#
-#	cd /tmp
-#	sudo -u "'$username'" git clone https://aur.archlinux.org/yay.git;
-#	cd yay;
-#	sudo -u "'$username'" makepkg -si;
-#	cd;
-#
-#	set +xe
-#	[ "'$is_virtual'" == "true" ] && \
-#		yay -S virtualbox-guest-utils && \
-#		systemctl enable vboxservice.service && \
-#		VBoxClient --clipboard && \
-#		VBoxClient --seamless;
-#	'
-#
+arch-chroot /mnt sh -c \
+	'
+	set -xe;
+	sed -i "s/^#en_US.UTF-8/en_US.UTF-8/g" /etc/locale.gen;
+	
+	echo "LANG=en_US.UTF-8" > /etc/locale.conf;
+	locale-gen;
+	ln -sf /usr/share/zoneinfo/Africa/Johannesburg /etc/localtime;
+	hwclock --systohc;
+
+	systemctl enable ufw.service;
+	systemctl enable NetworkManager;
+	systemctl enable docker.service;
+
+	sed -i "s/^#\s*\(%wheel\s\+ALL=(ALL:ALL)\s\+ALL\)/\1/" /etc/sudoers
+
+	set +xe;
+	echo "root:'$rootpass'" | chpasswd;
+	useradd -m "'$username'"
+	usermod -aG wheel,audio,video,storage,power,docker "'$username'"
+	echo "'$username':'$userpass'" | chpasswd;
+
+	set -xe;
+	echo "'$hostname'" > /etc/hostname;
+	echo "127.0.0.1	localhost.localdomain   localhost" >> /etc/hosts;
+	echo "::1		localhost.localdomain   localhost" >> /etc/hosts;
+	echo "127.0.0.1    '$hostname'.localdomain    '$hostname'" >> /etc/hosts;
+
+	grub-install --target=x86_64-efi --efi-directory=/boot --bootloader-id=GRUB;
+	grub-mkconfig -o /boot/grub/grub.cfg;
+
+	cd /tmp
+	sudo -u "'$username'" git clone https://aur.archlinux.org/yay.git;
+	cd yay;
+	sudo -u "'$username'" makepkg -si;
+	cd;
+
+	set +xe
+	[ "'$is_virtual'" == "true" ] && \
+		yay -S virtualbox-guest-utils && \
+		systemctl enable vboxservice.service && \
+		VBoxClient --clipboard && \
+		VBoxClient --seamless;
+	'
+
 # Finalize. 
 umount -R /mnt
 swapoff $swap
