@@ -57,15 +57,16 @@ timedatectl set-ntp true
 
 pacstrap /mnt \
 	linux-hardened linux-hardened-headers linux-firmware efibootmgr grub \
-	networkmanager network-manager-applet networkmanager-openvpn ufw man pulseaudio pavucontrol \
-	base base-devel zsh git neovim docker openvpn \
-	rofi tmux firefox curl ttf-bigblueterminal-nerd
+	networkmanager network-manager-applet networkmanager-openvpn ufw man pulseaudio \
+	base base-devel xorg-server xorg-apps xorg-xinit i3-wm i3-status \
+	lightdm lightdm-slick-greeter zsh git neovim docker openvpn pavucontrol rofi tmux \
+	firefox curl perl-anyevent-i3 ttf-bigblueterminal-nerd
 
 genfstab -U /mnt > /mnt/etc/fstab
 
 # Check if install is for Virtualbox machine
 is_virtual="false"
-[ ! -z "$2" ] && [ "$2" == "-v" ] && echo "This is a vbox setup" && is_virtual="true"
+[ ! -z "$2" ] && [ "$2" == "-v" ] && is_virtual="true"
 
 # Configuring system.
 arch-chroot /mnt sh -c \
@@ -80,6 +81,7 @@ arch-chroot /mnt sh -c \
 
 	systemctl enable ufw.service;
 	systemctl enable NetworkManager;
+	systemctl enable lightdm.service;
 	systemctl enable docker.service;
 
 	sed -i "s/^#\s*\(%wheel\s\+ALL=(ALL:ALL)\s\+ALL\)/\1/" /etc/sudoers
@@ -107,7 +109,7 @@ arch-chroot /mnt sh -c \
 
 	set +xe
 	[ "'$is_virtual'" == "true" ] && \
-		yay -S virtualbox-guest-utils && \
+		yay -S virtualbox-guest-utils --noconfirm && \
 		systemctl enable vboxservice.service && \
 		VBoxClient --clipboard && \
 		VBoxClient --seamless;
