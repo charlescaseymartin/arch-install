@@ -70,7 +70,7 @@ genfstab -U /mnt > /mnt/etc/fstab
 
 # Check if install is for Virtualbox machine
 is_virtual="false"
-[ ! -z "$2" && "$2" == "-v" ] && echo "This is a vbox setup" && is_virtual="true"
+[ ! -z "$2" ] && [ "$2" == "-v" ] && echo "This is a vbox setup" && is_virtual="true"
 
 arch-chroot /mnt sh -c 'Is this a vbox setup: "'$is_virtual'"'
 
