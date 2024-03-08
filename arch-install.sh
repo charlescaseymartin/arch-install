@@ -65,54 +65,54 @@ genfstab -U /mnt > /mnt/etc/fstab
 
 # Check if install is for Virtualbox machine
 is_virtual="false"
-[ ! -z "$2" && "$2" == "-v" ] && is_virtual="true"
+[ ! -z "$2" && "$2" == "-v" ] && echo "This is a vbox setup" && is_virtual="true"
 
 # Configuring system.
-arch-chroot /mnt sh -c \
-	'
-	set -xe;
-	sed -i "s/^#en_US.UTF-8/en_US.UTF-8/g" /etc/locale.gen;
-	
-	echo "LANG=en_US.UTF-8" > /etc/locale.conf;
-	locale-gen;
-	ln -sf /usr/share/zoneinfo/Africa/Johannesburg /etc/localtime;
-	hwclock --systohc;
-
-	systemctl enable ufw.service;
-	systemctl enable NetworkManager;
-	systemctl enable docker.service;
-
-	sed -i "s/^#\s*\(%wheel\s\+ALL=(ALL:ALL)\s\+ALL\)/\1/" /etc/sudoers
-
-	set +xe;
-	echo "root:'$rootpass'" | chpasswd;
-	useradd -m "'$username'"
-	usermod -aG wheel,audio,video,storage,power,docker "'$username'"
-	echo "'$username':'$userpass'" | chpasswd;
-
-	set -xe;
-	echo "'$hostname'" > /etc/hostname;
-	echo "127.0.0.1	localhost.localdomain   localhost" >> /etc/hosts;
-	echo "::1		localhost.localdomain   localhost" >> /etc/hosts;
-	echo "127.0.0.1    '$hostname'.localdomain    '$hostname'" >> /etc/hosts;
-
-	grub-install --target=x86_64-efi --efi-directory=/boot --bootloader-id=GRUB;
-	grub-mkconfig -o /boot/grub/grub.cfg;
-
-	cd /tmp
-	sudo -u "'$username'" git clone https://aur.archlinux.org/yay.git;
-	cd yay;
-	sudo -u "'$username'" makepkg -si;
-	cd;
-
-	set +xe
-	[ "'$is_virtual'" == "true" ] && \
-		yay -S virtualbox-guest-utils && \
-		systemctl enable vboxservice.service && \
-		VBoxClient --clipboard && \
-		VBoxClient --seamless;
-	'
-
+#arch-chroot /mnt sh -c \
+#	'
+#	set -xe;
+#	sed -i "s/^#en_US.UTF-8/en_US.UTF-8/g" /etc/locale.gen;
+#	
+#	echo "LANG=en_US.UTF-8" > /etc/locale.conf;
+#	locale-gen;
+#	ln -sf /usr/share/zoneinfo/Africa/Johannesburg /etc/localtime;
+#	hwclock --systohc;
+#
+#	systemctl enable ufw.service;
+#	systemctl enable NetworkManager;
+#	systemctl enable docker.service;
+#
+#	sed -i "s/^#\s*\(%wheel\s\+ALL=(ALL:ALL)\s\+ALL\)/\1/" /etc/sudoers
+#
+#	set +xe;
+#	echo "root:'$rootpass'" | chpasswd;
+#	useradd -m "'$username'"
+#	usermod -aG wheel,audio,video,storage,power,docker "'$username'"
+#	echo "'$username':'$userpass'" | chpasswd;
+#
+#	set -xe;
+#	echo "'$hostname'" > /etc/hostname;
+#	echo "127.0.0.1	localhost.localdomain   localhost" >> /etc/hosts;
+#	echo "::1		localhost.localdomain   localhost" >> /etc/hosts;
+#	echo "127.0.0.1    '$hostname'.localdomain    '$hostname'" >> /etc/hosts;
+#
+#	grub-install --target=x86_64-efi --efi-directory=/boot --bootloader-id=GRUB;
+#	grub-mkconfig -o /boot/grub/grub.cfg;
+#
+#	cd /tmp
+#	sudo -u "'$username'" git clone https://aur.archlinux.org/yay.git;
+#	cd yay;
+#	sudo -u "'$username'" makepkg -si;
+#	cd;
+#
+#	set +xe
+#	[ "'$is_virtual'" == "true" ] && \
+#		yay -S virtualbox-guest-utils && \
+#		systemctl enable vboxservice.service && \
+#		VBoxClient --clipboard && \
+#		VBoxClient --seamless;
+#	'
+#
 # Finalize. 
 umount -R /mnt
 swapoff $swap
