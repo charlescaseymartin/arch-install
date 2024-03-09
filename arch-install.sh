@@ -59,7 +59,7 @@ pacstrap /mnt \
 	linux-hardened linux-hardened-headers linux-firmware efibootmgr grub \
 	networkmanager network-manager-applet networkmanager-openvpn ufw man pulseaudio \
 	base base-devel xorg-server xorg-apps xorg-xinit i3-wm i3status lightdm \
-	lightdm-slick-greeter zsh git neovim docker openvpn pavucontrol dmenu rofi tmux \
+	lightdm-slick-greeter zsh git neovim docker openvpn pavucontrol rofi tmux \
 	alacritty firefox curl perl-anyevent-i3 ttf-bigblueterminal-nerd
 
 genfstab -U /mnt > /mnt/etc/fstab
@@ -104,10 +104,10 @@ arch-chroot /mnt sh -c \
 	sed -i \
 		"s/#greeter-session=example-gtk-gnome/greeter-session=lightdm-slick-greeter/" \
 		/etc/lightdm/lightdm.conf;
-	sed -i "s/#autologin-session=/autologin-session=i3/g" /etc/lightdm/lightdm.conf
+	sed -i "s/#autologin-session=/autologin-session=i3/g" /etc/lightdm/lightdm.conf;
 	sed -i \
 		"s/^exec\s*xterm\s*-geometry\s*80x66+0+0\s*-name\s*login/exec i3/g" \
-		/etc/X11/xinit/xinitrc
+		/etc/X11/xinit/xinitrc;
 
 	cd /tmp
 	sudo -u "'$username'" git clone https://aur.archlinux.org/yay.git;
@@ -121,6 +121,13 @@ arch-chroot /mnt sh -c \
 		systemctl enable vboxservice.service && \
 		VBoxClient --clipboard && \
 		VBoxClient --seamless;
+	
+	set -xe
+	cd /opt;
+	mkdir dotfiles;
+	git clone https://github.com/charlescaseymartin/archlinux-moded-dotfiles.git;
+	cd archlinux-moded-dotfiles;
+	sh install.sh -i;
 	'
 
 # Finalize. 
