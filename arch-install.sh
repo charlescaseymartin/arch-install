@@ -68,6 +68,21 @@ genfstab -U /mnt > /mnt/etc/fstab
 is_virtual="false"
 [ ! -z "$2" ] && [ "$2" == "-v" ] && is_virtual="true"
 
+# Install commands
+install_ohmyzsh(){
+	cd $HOME;
+	curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh | sh
+}
+
+install_dotfiles(){
+	local config_dir="$HOME/.config";
+	[ ! -d $config_dir ] && mkdir $config_dir;
+	cd $config_dir;
+	git clone https://github.com/charlescaseymartin/dotfiles.git;
+	cd ./dotfiles;
+	sh install.sh -i;
+}
+
 # Configuring system.
 arch-chroot /mnt sh -c \
 	'
@@ -109,25 +124,25 @@ arch-chroot /mnt sh -c \
 		"s/^exec\s*xterm\s*-geometry\s*80x66+0+0\s*-name\s*login/exec i3/g" \
 		/etc/X11/xinit/xinitrc;
 
+	"'$(install_ohmyzsh)'";
+	"'$(install_dotfiles)'";
+	sudo -u "'$username'" "'$(install_ohmyzsh)'";
+	sudo -u "'$username'" "'$(install_dotfiles)'";
+	chsh -s $(which zsh);
+
 	cd /tmp
 	sudo -u "'$username'" git clone https://aur.archlinux.org/yay.git;
 	cd yay;
 	sudo -u "'$username'" makepkg -si;
 	cd;
 
-	set +xe
+	set +xe;
 	[ "'$is_virtual'" == "true" ] && \
 		yay -S virtualbox-guest-utils --noconfirm && \
 		systemctl enable vboxservice.service && \
 		VBoxClient --clipboard && \
-		VBoxClient --seamless;
-	
-	set -xe
-	cd /opt;
-	mkdir dotfiles;
-	git clone https://github.com/charlescaseymartin/archlinux-moded-dotfiles.git;
-	cd archlinux-moded-dotfiles;
-	sh install.sh -i;
+		VBoxClient --seamless && \
+		printf "Installed VBox Guest Utils.";
 	'
 
 # Finalize. 
