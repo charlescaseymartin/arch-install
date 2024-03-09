@@ -102,7 +102,7 @@ arch-chroot /mnt sh -c \
 	grub-mkconfig -o /boot/grub/grub.cfg;
 
 	sed -i \
-		"s/#guest-session=/guest-session=lightdm-slick-greeter/" \
+		"s/#greeter-setup-script=/greeter-setup-script=lightdm-slick-greeter/" \
 		/etc/lightdm/lightdm.conf;
 	sed -i "s/#autologin-session=/autologin-session=i3/g" /etc/lightdm/lightdm.conf
 	sed -i \
