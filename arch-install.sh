@@ -71,14 +71,14 @@ is_virtual="false"
 # Install commands
 install_ohmyzsh(){
 	cd $HOME;
-	$('curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh | sh');
+	curl -fsSL "https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh" | sh;
 }
 
 install_dotfiles(){
 	local config_dir="$HOME/.config";
 	[ ! -d $config_dir ] && mkdir $config_dir;
 	cd $config_dir;
-	$('git clone https://github.com/charlescaseymartin/dotfiles.git');
+	git clone "https://github.com/charlescaseymartin/dotfiles.git";
 	cd ./dotfiles;
 	sh install.sh -i;
 }
