@@ -59,7 +59,7 @@ pacstrap /mnt \
 	linux-hardened linux-hardened-headers linux-firmware efibootmgr grub \
 	networkmanager network-manager-applet networkmanager-openvpn ufw man pulseaudio \
 	base base-devel xorg-server xorg-apps xorg-xinit i3-wm i3status lightdm \
-	lightdm-slick-greeter zsh git neovim docker openvpn pavucontrol rofi tmux \
+	lightdm-slick-greeter zsh git neovim docker openvpn pavucontrol dmenu rofi tmux \
 	firefox curl perl-anyevent-i3 ttf-bigblueterminal-nerd
 
 genfstab -U /mnt > /mnt/etc/fstab
