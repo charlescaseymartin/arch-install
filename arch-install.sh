@@ -124,10 +124,14 @@ arch-chroot /mnt sh -c \
 		"s/^exec\s*xterm\s*-geometry\s*80x66+0+0\s*-name\s*login/exec i3/g" \
 		/etc/X11/xinit/xinitrc;
 
-	"'$(install_ohmyzsh)'";
-	"'$(install_dotfiles)'";
-	sudo -u "'$username'" "'$(install_ohmyzsh)'";
-	sudo -u "'$username'" "'$(install_dotfiles)'";
+	cd $HOME;
+	curl -fsSL "https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh" | sh;
+	[ ! -d "$HOME/.config" ] && mkdir "$HOME/.config";
+	cd "$HOME/.config";
+	git clone "https://github.com/charlescaseymartin/dotfiles.git";
+	cd ./dotfiles;
+	sh install.sh -i;
+	
 	chsh -s $(which zsh);
 
 	cd /tmp
