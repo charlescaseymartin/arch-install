@@ -131,7 +131,16 @@ arch-chroot /mnt sh -c \
 	git clone "https://github.com/charlescaseymartin/dotfiles.git";
 	cd ./dotfiles;
 	sh install.sh -i;
-	
+
+	sudo -u "'$username'" \
+		cd $HOME && \
+		curl -fsSL "https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh" | sh; 
+	sudo -u "'$username'" \
+		cd "$HOME/.config" && \
+		git clone "https://github.com/charlescaseymartin/dotfiles.git" && \
+		cd ./dotfiles && \
+		sh install.sh -i;
+
 	chsh -s $(which zsh);
 
 	cd /tmp
