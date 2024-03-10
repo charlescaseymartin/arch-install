@@ -68,9 +68,6 @@ genfstab -U /mnt > /mnt/etc/fstab
 is_virtual="false"
 [ ! -z "$2" ] && [ "$2" == "-v" ] && is_virtual="true"
 
-# Install commands
-install_ohmyzsh='curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh | sh'
-
 # Configuring system.
 arch-chroot /mnt sh -c \
 	'
@@ -82,24 +79,33 @@ arch-chroot /mnt sh -c \
 	ln -sf /usr/share/zoneinfo/Africa/Johannesburg /etc/localtime;
 	hwclock --systohc;
 
+	set -xe;
+	echo "'$hostname'" > /etc/hostname;
+	echo "127.0.0.1	localhost.localdomain   localhost" >> /etc/hosts;
+	echo "::1		localhost.localdomain   localhost" >> /etc/hosts;
+	echo "127.0.0.1    '$hostname'.localdomain    '$hostname'" >> /etc/hosts;
+
 	systemctl enable ufw.service;
 	systemctl enable NetworkManager;
 	systemctl enable lightdm.service;
 	systemctl enable docker.service;
 
-	sed -i "s/^#\s*\(%wheel\s\+ALL=(ALL:ALL)\s\+ALL\)/\1/" /etc/sudoers
+	cd $HOME;
+	curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh | sh;
+	mkdir $HOME/.config;
+	cd $HOME/.config;
+	git clone https://github.com/charlescaseymartin/dotfiles.git;
+	cd dotfiles;
+	sh install.sh -i;
+
+	echo "move configs to /etc/skel"
 
 	set +xe;
 	echo "root:'$rootpass'" | chpasswd;
 	useradd -m "'$username'"
 	usermod -aG wheel,audio,video,storage,power,docker "'$username'"
 	echo "'$username':'$userpass'" | chpasswd;
-
-	set -xe;
-	echo "'$hostname'" > /etc/hostname;
-	echo "127.0.0.1	localhost.localdomain   localhost" >> /etc/hosts;
-	echo "::1		localhost.localdomain   localhost" >> /etc/hosts;
-	echo "127.0.0.1    '$hostname'.localdomain    '$hostname'" >> /etc/hosts;
+	sed -i "s/^#\s*\(%wheel\s\+ALL=(ALL:ALL)\s\+ALL\)/\1/" /etc/sudoers
 
 	grub-install --target=x86_64-efi --efi-directory=/boot --bootloader-id=GRUB;
 	grub-mkconfig -o /boot/grub/grub.cfg;
@@ -112,19 +118,8 @@ arch-chroot /mnt sh -c \
 		"s/^exec\s*xterm\s*-geometry\s*80x66+0+0\s*-name\s*login/exec i3/g" \
 		/etc/X11/xinit/xinitrc;
 
-	"'$(install_ohmyzsh)'";
-	mkdir $HOME/.config;
-	cd $HOME/.config;
-	git clone https://github.com/charlescaseymartin/dotfiles.git;
-	cd dotfiles;
-	sh install.sh -i;
-
-	sudo -u "'$username'" "cd $HOME && '$(install_ohmyzsh)'";
-	sudo -u "'$username'" "cd $HOME/.config && \
-		git clone https://github.com/charlescaseymartin/dotfiles.git && \
-		cd dotfiles && \
-		sh install.sh -i";
 	chsh -s $(which zsh);
+	sudo -u "'$username'" chsh -s $(which zsh);
 
 	cd /tmp
 	sudo -u "'$username'" git clone https://aur.archlinux.org/yay.git;
