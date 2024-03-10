@@ -69,19 +69,7 @@ is_virtual="false"
 [ ! -z "$2" ] && [ "$2" == "-v" ] && is_virtual="true"
 
 # Install commands
-install_ohmyzsh(){
-	cd $HOME;
-	curl -fsSL "https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh" | sh;
-}
-
-install_dotfiles(){
-	local config_dir="$HOME/.config";
-	[ ! -d $config_dir ] && mkdir $config_dir;
-	cd $config_dir;
-	git clone "https://github.com/charlescaseymartin/dotfiles.git";
-	cd ./dotfiles;
-	sh install.sh -i;
-}
+install_ohmyzsh='curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh | sh'
 
 # Configuring system.
 arch-chroot /mnt sh -c \
@@ -124,23 +112,18 @@ arch-chroot /mnt sh -c \
 		"s/^exec\s*xterm\s*-geometry\s*80x66+0+0\s*-name\s*login/exec i3/g" \
 		/etc/X11/xinit/xinitrc;
 
-	cd $HOME;
-	curl -fsSL "https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh" | sh;
-	[ ! -d "$HOME/.config" ] && mkdir "$HOME/.config";
-	cd "$HOME/.config";
-	git clone "https://github.com/charlescaseymartin/dotfiles.git";
-	cd ./dotfiles;
+	"'$(install_ohmyzsh)'";
+	mkdir $HOME/.config;
+	cd $HOME/.config;
+	git clone https://github.com/charlescaseymartin/dotfiles.git;
+	cd dotfiles;
 	sh install.sh -i;
 
-	sudo -u "'$username'" \
-		cd $HOME && \
-		curl -fsSL "https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh" | sh; 
-	sudo -u "'$username'" \
-		cd "$HOME/.config" && \
-		git clone "https://github.com/charlescaseymartin/dotfiles.git" && \
-		cd ./dotfiles && \
-		sh install.sh -i;
-
+	sudo -u "'$username'" "cd $HOME && '$(install_ohmyzsh)'";
+	sudo -u "'$username'" "cd $HOME/.config && \
+		git clone https://github.com/charlescaseymartin/dotfiles.git && \
+		cd dotfiles && \
+		sh install.sh -i";
 	chsh -s $(which zsh);
 
 	cd /tmp
