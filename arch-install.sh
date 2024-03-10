@@ -98,7 +98,7 @@ arch-chroot /mnt sh -c \
 	cd dotfiles;
 	sh install.sh -i;
 
-	echo "y" | cp -r $HOME/. /etc/skel;
+	yes | cp -r $HOME/. /etc/skel;
 
 	set +xe;
 	echo "root:'$rootpass'" | chpasswd;
