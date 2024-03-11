@@ -131,8 +131,8 @@ arch-chroot /mnt sh -c \
 	[ "'$is_virtual'" == "true" ] && \
 		yay -S virtualbox-guest-utils --noconfirm && \
 		systemctl enable vboxservice.service && \
-		VBoxClient --clipboard && \
-		VBoxClient --seamless && \
+		VBoxClient --clipboard && VBoxClient --seamless && \
+		sudo -u "'$username'" VBoxClient --clipboard && VBoxClient --seamless && \
 		printf "Installed VBox Guest Utils.";
 	'
 
