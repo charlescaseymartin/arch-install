@@ -73,7 +73,7 @@ arch-chroot /mnt sh -c \
 	'
 	set -xe;
 	sed -i "s/^#en_US.UTF-8/en_US.UTF-8/g" /etc/locale.gen;
-	
+
 	echo "LANG=en_US.UTF-8" > /etc/locale.conf;
 	locale-gen;
 	ln -sf /usr/share/zoneinfo/Africa/Johannesburg /etc/localtime;
@@ -131,12 +131,11 @@ arch-chroot /mnt sh -c \
 	[ "'$is_virtual'" == "true" ] && \
 		yay -S virtualbox-guest-utils --noconfirm && \
 		systemctl enable vboxservice.service && \
-		VBoxClient --clipboard && VBoxClient --seamless && \
-		sudo -u "'$username'" VBoxClient --clipboard && VBoxClient --seamless && \
-		printf "Installed VBox Guest Utils.";
+		VBoxClient-all && \
+		sudo -u "'$username'" VBoxClient-all;
 	'
 
-# Finalize. 
+# Finalize.
 umount -R /mnt
 swapoff $swap
 printf "\n--- Installation Complete! ---"
